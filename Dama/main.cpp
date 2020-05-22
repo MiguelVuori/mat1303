@@ -2,9 +2,8 @@
 #include <GL/glut.h>
 #include "Window.h"
 
-Window w(-1, 6, -1, 6, 800, 800);
+Window w(-0.5, 5.5, -0.5, 5.5, 800, 800);
 Tabuleiro tabuleiro;
-
 
 bool peca_bool = false;
 float mouse_x, mouse_y;
@@ -15,15 +14,15 @@ void peca()
     float peca_x, peca_y;
     peca_x = w.getl() + mouse_x / (w.getDIMX() - 1) * (w.getr() - w.getl());
     peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
-    if(cor_peca == 0)
+    if (cor_peca == 0)
         glColor3f(1, 0, 0);
     else
         glColor3f(0, 0, 1);
-    
+
     glEnable(GL_POINT_SMOOTH);
     glPointSize(50.0);
     glBegin(GL_POINTS);
-        glVertex2f(peca_x, peca_y);
+    glVertex2f(peca_x, peca_y);
     glEnd();
 }
 
@@ -57,22 +56,27 @@ void Botao_mouse(int botao, int state, int x, int y)
         peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
         if (state == GLUT_DOWN)
         {
-            cor_peca = tabuleiro.getColor(peca_y, peca_x);
-            tabuleiro.setColor(peca_y, peca_x, 2);
-            peca_bool = true;
+            if (peca_x <= 4 && peca_y <= 4 && peca_x >= 0 && peca_y >= 0)
+            {
+                cout << "peguei!";
+                cor_peca = tabuleiro.getColor(peca_y, peca_x);
+                tabuleiro.setColor(peca_y, peca_x, 2);
+                peca_bool = true;
+            }
             cout << "botao esquerdo pressionado" << x << ", " << y << endl;
         }
         else
         {
+
             if (state == GLUT_UP)
             {
-                // peca_x = w.getl() + mouse_x / (w.getDIMX() - 1) * (w.getr() - w.getl());
-                // peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
-                tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                if (peca_x <= 4 && peca_y <= 4 && peca_x >= 0 && peca_y >= 0)
+                {
+                    tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                }
                 peca_bool = false;
                 glutPostRedisplay();
             }
-
         }
     }
 }
