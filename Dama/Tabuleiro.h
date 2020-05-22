@@ -8,7 +8,8 @@ class Tabuleiro
 {
 private:
     int Mat_Tab[5][5];
-
+    int num_pecas_vermelhas;
+    int num_pecas_amarelas;
 public:
     Tabuleiro();
     void mostra();
@@ -37,6 +38,8 @@ Tabuleiro::Tabuleiro()
             }
         }
     }
+    num_pecas_amarelas = 12;
+    num_pecas_vermelhas = 12;
 }
 
 void Tabuleiro::mostra()
@@ -81,7 +84,7 @@ int Tabuleiro::getColor(int i, int j){
     }
     else
     {
-        cout << "ponto invalido! \n";
+        return 3;
     }
 }
 

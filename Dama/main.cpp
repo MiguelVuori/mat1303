@@ -5,7 +5,7 @@
 Window w(-0.5, 5.5, -0.5, 5.5, 800, 800);
 Tabuleiro tabuleiro;
 
-bool peca_bool = false;
+bool peca_bool = false, vez = false;
 float mouse_x, mouse_y;
 int cor_peca = 2;
 int peca_x0, peca_y0;
@@ -55,14 +55,23 @@ void Botao_mouse(int botao, int state, int x, int y)
     {
         peca_x = w.getl() + mouse_x / (w.getDIMX() - 1) * (w.getr() - w.getl());
         peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
+
         if (state == GLUT_DOWN)
         {
             if (peca_x <= 4 && peca_y <= 4 && peca_x >= 0 && peca_y >= 0)
             {
                 cout << "peguei!";
                 cor_peca = tabuleiro.getColor(peca_y, peca_x);
-                tabuleiro.setColor(peca_y, peca_x, 2);
-                peca_bool = true;
+                if (cor_peca == 0 && vez == false)
+                {
+                    tabuleiro.setColor(peca_y, peca_x, 2);
+                    peca_bool = true;
+                }
+                else if (cor_peca == 1 && vez == true)
+                {
+                    tabuleiro.setColor(peca_y, peca_x, 2);
+                    peca_bool = true;
+                }
             }
             cout << "botao esquerdo pressionado" << x << ", " << y << endl;
             peca_x0 = peca_x;
@@ -70,9 +79,9 @@ void Botao_mouse(int botao, int state, int x, int y)
         }
         else
         {
-            if (state == GLUT_UP)
+            if (state == GLUT_UP && peca_bool == true)
             {
-                
+
                 if (tabuleiro.getColor(peca_y, peca_x) == 2)
                 {
                     int dif_peca_x, dif_peca_y;
@@ -83,36 +92,37 @@ void Botao_mouse(int botao, int state, int x, int y)
                     {
                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                         peca_bool = false;
+                        vez = !vez;
                         glutPostRedisplay();
                     }
                     else if (fabs(dif_peca_y) <= 2 && fabs(dif_peca_x) <= 2)
                     {
-                        switch(dif_peca_x + 3 * dif_peca_y)
+                        switch (dif_peca_x + 3 * dif_peca_y)
                         {
-                            case 2:
-                                tabuleiro.setColor(peca_y, peca_x - 1, 2);
-                                break;
-                            case -4:
-                                tabuleiro.setColor(peca_y + 1, peca_x - 1, 2);
-                                break;
-                            case -6:
-                                tabuleiro.setColor(peca_y + 1, peca_x, 2);
-                                break;
-                            case -8:
-                                tabuleiro.setColor(peca_y + 1, peca_x + 1, 2);
-                                break;
-                            case -2:
-                                tabuleiro.setColor(peca_y, peca_x + 1, 2);
-                                break;
-                            case 4:
-                                tabuleiro.setColor(peca_y - 1, peca_x + 1, 2);
-                                break;
-                            case 6:
-                                tabuleiro.setColor(peca_y - 1, peca_x, 2);
-                                break;
-                            case 8:
-                                tabuleiro.setColor(peca_y - 1, peca_x - 1, 2);
-                                break;
+                        case 2:
+                            tabuleiro.setColor(peca_y, peca_x - 1, 2);
+                            break;
+                        case -4:
+                            tabuleiro.setColor(peca_y + 1, peca_x - 1, 2);
+                            break;
+                        case -6:
+                            tabuleiro.setColor(peca_y + 1, peca_x, 2);
+                            break;
+                        case -8:
+                            tabuleiro.setColor(peca_y + 1, peca_x + 1, 2);
+                            break;
+                        case -2:
+                            tabuleiro.setColor(peca_y, peca_x + 1, 2);
+                            break;
+                        case 4:
+                            tabuleiro.setColor(peca_y - 1, peca_x + 1, 2);
+                            break;
+                        case 6:
+                            tabuleiro.setColor(peca_y - 1, peca_x, 2);
+                            break;
+                        case 8:
+                            tabuleiro.setColor(peca_y - 1, peca_x - 1, 2);
+                            break;
                         }
                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                         peca_bool = false;
