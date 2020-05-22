@@ -52,8 +52,6 @@ void Tabuleiro::mostra()
     }
     glEnd();
 
-    glColor3f(1, 0, 0);
-    //glPushMatrix();
     glEnable(GL_POINT_SMOOTH);
     glPointSize(50.0);
     glBegin(GL_POINTS);
@@ -68,22 +66,12 @@ void Tabuleiro::mostra()
             }
             else if (Mat_Tab[i][j] == 1)
             {
-                glColor3f(0, 0, 1);
+                glColor3f(1, 1, 0);
                 glVertex2f(0.5 + j, 0.5 + i);
             }
-            // glLoadIdentity();
-            // glTranslatef(0.5 + j, 0.5 + i, 0);
-            // glBegin(GL_POLYGON);
-            //for (int k = 0; k < 100; k++)
-            //{
-                // glVertex2f(0.5 * cos(theta), 0.5 * sin(theta));
-                // theta = theta + dtheta;
-            //}
-            // glEnd();
         }
     }
     glEnd();
-    //glPopMatrix();
 }
 
 int Tabuleiro::getColor(int i, int j){

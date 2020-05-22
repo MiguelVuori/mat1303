@@ -18,7 +18,7 @@ void peca()
     if (cor_peca == 0)
         glColor3f(1, 0, 0);
     else
-        glColor3f(0, 0, 1);
+        glColor3f(1, 1, 0);
 
     glEnable(GL_POINT_SMOOTH);
     glPointSize(50.0);
@@ -72,9 +72,58 @@ void Botao_mouse(int botao, int state, int x, int y)
         {
             if (state == GLUT_UP)
             {
+                
                 if (tabuleiro.getColor(peca_y, peca_x) == 2)
                 {
-                    tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                    int dif_peca_x, dif_peca_y;
+                    dif_peca_x = peca_x - peca_x0;
+                    dif_peca_y = peca_y - peca_y0;
+
+                    if (fabs(dif_peca_x) <= 1 && fabs(dif_peca_y) <= 1)
+                    {
+                        tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                        peca_bool = false;
+                        glutPostRedisplay();
+                    }
+                    else if (fabs(dif_peca_y) <= 2 && fabs(dif_peca_x) <= 2)
+                    {
+                        switch(dif_peca_x + 3 * dif_peca_y)
+                        {
+                            case 2:
+                                tabuleiro.setColor(peca_y, peca_x - 1, 2);
+                                break;
+                            case -4:
+                                tabuleiro.setColor(peca_y + 1, peca_x - 1, 2);
+                                break;
+                            case -6:
+                                tabuleiro.setColor(peca_y + 1, peca_x, 2);
+                                break;
+                            case -8:
+                                tabuleiro.setColor(peca_y + 1, peca_x + 1, 2);
+                                break;
+                            case -2:
+                                tabuleiro.setColor(peca_y, peca_x + 1, 2);
+                                break;
+                            case 4:
+                                tabuleiro.setColor(peca_y - 1, peca_x + 1, 2);
+                                break;
+                            case 6:
+                                tabuleiro.setColor(peca_y - 1, peca_x, 2);
+                                break;
+                            case 8:
+                                tabuleiro.setColor(peca_y - 1, peca_x - 1, 2);
+                                break;
+                        }
+                        tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                        peca_bool = false;
+                        glutPostRedisplay();
+                    }
+                    else
+                    {
+                        tabuleiro.setColor(peca_y0, peca_x0, cor_peca);
+                        peca_bool = false;
+                        glutPostRedisplay();
+                    }
                 }
                 else
                 {
