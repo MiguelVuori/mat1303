@@ -41,7 +41,7 @@ void display()
 
 void Botao_mouse(int botao, int state, int x, int y)
 {
-    int peca_x, peca_y;
+    int peca_x, peca_y, cor_peca;
     mouse_x = x;
     mouse_y = y;
     if (botao == GLUT_LEFT_BUTTON)
@@ -50,7 +50,8 @@ void Botao_mouse(int botao, int state, int x, int y)
         peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
         if (state == GLUT_DOWN)
         {
-            tabuleiro.sumir(peca_y, peca_x);
+            cor_peca = tabuleiro.getColor(peca_y, peca_x);
+            tabuleiro.setColor(peca_y, peca_x, 2);
             peca_bool = true;
             cout << "botao esquerdo pressionado" << x << ", " << y << endl;
         }

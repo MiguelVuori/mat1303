@@ -12,7 +12,8 @@ private:
 public:
     Tabuleiro();
     void mostra();
-    void sumir(int i, int j);
+    int getColor(int i, int j);
+    void setColor(int i , int j, int color);
 };
 
 Tabuleiro::Tabuleiro()
@@ -86,14 +87,25 @@ void Tabuleiro::mostra()
     //glPopMatrix();
 }
 
-void Tabuleiro::sumir(int i, int j){
+int Tabuleiro::getColor(int i, int j){
     if(i <= 4 && j <= 4 && i >= 0 && j >= 0){
-        cout << i << j << "\n";
-        Mat_Tab[i][j] = 2;
+        cout << i << j << "cor " << Mat_Tab[i][j] << "\n";
+        return Mat_Tab[i][j];
     }
     else
     {
-        cout << "click invalido! \n";
+        cout << "ponto invalido! \n";
     }
 }
 
+void Tabuleiro::setColor(int i, int j, int color){
+    if(i <= 4 && j <= 4 && i >= 0 && j >= 0){
+        cout << i << j << "cor antiga" << Mat_Tab[i][j] << "\n";
+        Mat_Tab[i][j] = color;
+        cout << "cor nova " << color << "\n";
+    }
+    else
+    {
+        cout << "ponto invalido! \n";
+    }
+}
