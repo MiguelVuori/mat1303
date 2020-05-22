@@ -8,17 +8,22 @@ Tabuleiro tabuleiro;
 
 bool peca_bool = false;
 float mouse_x, mouse_y;
+int cor_peca = 2;
 
 void peca()
 {
     float peca_x, peca_y;
     peca_x = w.getl() + mouse_x / (w.getDIMX() - 1) * (w.getr() - w.getl());
     peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
-    glColor3f(1, 0, 0);
+    if(cor_peca == 0)
+        glColor3f(1, 0, 0);
+    else
+        glColor3f(0, 0, 1);
+    
     glEnable(GL_POINT_SMOOTH);
     glPointSize(50.0);
     glBegin(GL_POINTS);
-    glVertex2f(peca_x, peca_y);
+        glVertex2f(peca_x, peca_y);
     glEnd();
 }
 
@@ -43,7 +48,7 @@ void display()
 
 void Botao_mouse(int botao, int state, int x, int y)
 {
-    int peca_x, peca_y, cor_peca;
+    int peca_x, peca_y;
     mouse_x = x;
     mouse_y = y;
     if (botao == GLUT_LEFT_BUTTON)
@@ -61,9 +66,10 @@ void Botao_mouse(int botao, int state, int x, int y)
         {
             if (state == GLUT_UP)
             {
-                peca_x = w.getl() + mouse_x / (w.getDIMX() - 1) * (w.getr() - w.getl());
-                peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
-                tabuleiro.setColor(peca_y, peca_x, 2);
+                // peca_x = w.getl() + mouse_x / (w.getDIMX() - 1) * (w.getr() - w.getl());
+                // peca_y = w.gett() + mouse_y / (w.getDIMY() - 1) * (w.getb() - w.gett());
+                tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                peca_bool = false;
                 glutPostRedisplay();
             }
 
