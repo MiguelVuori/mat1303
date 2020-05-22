@@ -8,6 +8,7 @@ Tabuleiro tabuleiro;
 bool peca_bool = false;
 float mouse_x, mouse_y;
 int cor_peca = 2;
+float peca_x0, peca_y0;
 
 void peca()
 {
@@ -64,18 +65,25 @@ void Botao_mouse(int botao, int state, int x, int y)
                 peca_bool = true;
             }
             cout << "botao esquerdo pressionado" << x << ", " << y << endl;
+            peca_x0 = peca_x;
+            peca_y0 = peca_y;
         }
         else
         {
-
             if (state == GLUT_UP)
             {
-                if (peca_x <= 4 && peca_y <= 4 && peca_x >= 0 && peca_y >= 0)
+                if (tabuleiro.getColor(peca_y, peca_x) == 2)
                 {
                     tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                    peca_bool = false;
+                    glutPostRedisplay();
                 }
-                peca_bool = false;
-                glutPostRedisplay();
+                else
+                {
+                    tabuleiro.setColor(peca_y0, peca_x0, cor_peca);
+                    peca_bool = false;
+                    glutPostRedisplay();
+                }
             }
         }
     }
