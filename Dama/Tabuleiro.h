@@ -41,7 +41,6 @@ Tabuleiro::Tabuleiro()
 
 void Tabuleiro::mostra()
 {
-    double dtheta = 2 * Pi / 100, theta = 0;
     glColor3f(0, 1, 0);
     glBegin(GL_LINES);
     for (int i = 0; i <= 5; i++)
