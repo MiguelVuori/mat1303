@@ -120,7 +120,8 @@ void Botao_mouse(int botao, int state, int x, int y)
                     {
                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                         peca_bool = false;
-                        vez = !vez;
+                        if(!(peca_x == peca_x0 && peca_y == peca_y0))
+                            vez = !vez;
                         glutPostRedisplay();
                         killing_spree = false;
 
