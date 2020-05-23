@@ -3,7 +3,7 @@ Mathematic elements for CG
 
 ## TO-DO LIST
 * Implementar funcionalidades da peça rainha.
-* Peças aliadas não podem se comer.
+* Peças aliadas não podem se comer. Concluido
 * Implementar um bot pra jogar contra.
 * Implementar teclas de desistência (um pra cada player)
 * Antes de iniciar o jogo, perguntar qual lado você quer jogar, amarelo ou vermelho, e também perguntar se você quer jogar contra um robô ou contra outra pessoa.
