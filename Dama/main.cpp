@@ -5,7 +5,7 @@
 Window w(-0.5, 5.5, -0.5, 5.5, 800, 800);
 Tabuleiro tabuleiro;
 
-bool peca_bool = false, vez = false;
+bool peca_bool = false, vez = false, killing_spree = false;
 float mouse_x, mouse_y;
 int cor_peca = 2;
 int peca_x0, peca_y0;
@@ -62,22 +62,46 @@ void Botao_mouse(int botao, int state, int x, int y)
         {
             if (peca_x <= 4 && peca_y <= 4 && peca_x >= 0 && peca_y >= 0)
             {
-                cout << "peguei!";
-                cor_peca = tabuleiro.getColor(peca_y, peca_x);
-                if (cor_peca == 0 && vez == false)
+                if(killing_spree == true && peca_x0 == peca_x && peca_y == peca_y0)
                 {
-                    tabuleiro.setColor(peca_y, peca_x, 2);
-                    peca_bool = true;
+                    cout << "peguei!";
+                    cor_peca = tabuleiro.getColor(peca_y, peca_x);
+                    if (cor_peca == 0 && vez == false)
+                    {
+                        tabuleiro.setColor(peca_y, peca_x, 2);
+                        peca_bool = true;
+                    }
+                    else if (cor_peca == 1 && vez == true)
+                    {
+                        tabuleiro.setColor(peca_y, peca_x, 2);
+                        peca_bool = true;
+                    }
+                    cout << "botao esquerdo pressionado" << x << ", " << y << endl;
+                    peca_x0 = peca_x;
+                    peca_y0 = peca_y;
                 }
-                else if (cor_peca == 1 && vez == true)
+                else if (!killing_spree)
                 {
-                    tabuleiro.setColor(peca_y, peca_x, 2);
-                    peca_bool = true;
+                    cout << "peguei!";
+                    cor_peca = tabuleiro.getColor(peca_y, peca_x);
+                    if (cor_peca == 0 && vez == false)
+                    {
+                        tabuleiro.setColor(peca_y, peca_x, 2);
+                        peca_bool = true;
+                    }
+                    else if (cor_peca == 1 && vez == true)
+                    {
+                        tabuleiro.setColor(peca_y, peca_x, 2);
+                        peca_bool = true;
+                    }
+                    cout << "botao esquerdo pressionado" << x << ", " << y << endl;
+                    peca_x0 = peca_x;
+                    peca_y0 = peca_y;
                 }
             }
-            cout << "botao esquerdo pressionado" << x << ", " << y << endl;
-            peca_x0 = peca_x;
-            peca_y0 = peca_y;
+            //cout << "botao esquerdo pressionado" << x << ", " << y << endl;
+            //peca_x0 = peca_x;
+            //peca_y0 = peca_y;
         }
         else
         {
@@ -98,6 +122,8 @@ void Botao_mouse(int botao, int state, int x, int y)
                         peca_bool = false;
                         vez = !vez;
                         glutPostRedisplay();
+                        killing_spree = false;
+
                     }/* caso em que se come uma peca */
                     else if ((fabs(dif_peca_y) + fabs(dif_peca_x) == 2) or (fabs(dif_peca_y) + fabs(dif_peca_x) == 4))
                     {   
@@ -106,56 +132,56 @@ void Botao_mouse(int botao, int state, int x, int y)
                         switch (dif_peca_x + 3 * dif_peca_y)
                         {
                         case 2:
-                            if(tabuleiro.getColor(peca_y, peca_x - 1 ) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y, peca_x - 1))
+                            if(tabuleiro.getColor(peca_y, peca_x - 1 ) != 2 && cor_peca != tabuleiro.getColor(peca_y, peca_x - 1))
                             {
                                 tabuleiro.setColor(peca_y, peca_x - 1, 2);
                                 comeu = !comeu;
                             }
                             break;
                         case -4:
-                            if(tabuleiro.getColor(peca_y + 1, peca_x - 1) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y + 1, peca_x - 1)) 
+                            if(tabuleiro.getColor(peca_y + 1, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x - 1)) 
                             {
                                 tabuleiro.setColor(peca_y + 1, peca_x - 1, 2);
                                 comeu = !comeu;
                             }
                             break;
                         case -6:
-                            if(tabuleiro.getColor(peca_y + 1, peca_x) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y + 1, peca_x))
+                            if(tabuleiro.getColor(peca_y + 1, peca_x) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x))
                             {
                                 tabuleiro.setColor(peca_y + 1, peca_x, 2);
                                 comeu = !comeu;
                             }
                             break;
                         case -8:
-                        if(tabuleiro.getColor(peca_y + 1, peca_x + 1) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y + 1, peca_x + 1))
+                        if(tabuleiro.getColor(peca_y + 1, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x + 1))
                             {
                                 tabuleiro.setColor(peca_y + 1, peca_x + 1, 2);
                                 comeu = !comeu;
                             }
                             break;
                         case -2:
-                            if(tabuleiro.getColor(peca_y, peca_x + 1) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y, peca_x + 1))
+                            if(tabuleiro.getColor(peca_y, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y, peca_x + 1))
                             {
                                 tabuleiro.setColor(peca_y, peca_x + 1, 2);
                                 comeu = !comeu;
                             }
                             break;
                         case 4:
-                            if(tabuleiro.getColor(peca_y - 1, peca_x + 1) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y - 1, peca_x + 1))
+                            if(tabuleiro.getColor(peca_y - 1, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x + 1))
                             {
                                 tabuleiro.setColor(peca_y - 1, peca_x + 1, 2);
                                 comeu = !comeu;
                             }
                             break;
                         case 6:
-                            if(tabuleiro.getColor(peca_y - 1, peca_x) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y - 1, peca_x))
+                            if(tabuleiro.getColor(peca_y - 1, peca_x) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x))
                             {
                                 tabuleiro.setColor(peca_y - 1, peca_x, 2);
                                 comeu = !comeu;
                             }
                             break;
                         case 8:
-                            if(tabuleiro.getColor(peca_y - 1, peca_x - 1) != 2 && tabuleiro.getColor(peca_y0, peca_x0 ) != tabuleiro.getColor(peca_y - 1, peca_x - 1))
+                            if(tabuleiro.getColor(peca_y - 1, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x - 1))
                             {
                                 tabuleiro.setColor(peca_y - 1, peca_x - 1, 2);
                                 comeu = !comeu;
@@ -173,12 +199,16 @@ void Botao_mouse(int botao, int state, int x, int y)
                                 tabuleiro.set_num_amarelas(tabuleiro.get_num_amarelas() - 1);
                             }
 
+                            /* nao existe pecas de uma cor. Jogo acabou */
                             if (tabuleiro.get_num_vermelhas() == 0 or tabuleiro.get_num_amarelas() == 0)
                             {
                                 exit(0);
                             }
                             tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                            peca_x0 = peca_x;
+                            peca_y0 = peca_y;
                             peca_bool = false;
+                            killing_spree = true;
                             glutPostRedisplay();
                         }
                         else
