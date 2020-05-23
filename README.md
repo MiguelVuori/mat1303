@@ -6,7 +6,8 @@ Mathematic elements for CG
 * Peças aliadas não podem se comer. Concluido
 * Implementar um bot pra jogar contra.
 * Implementar teclas de desistência (um pra cada player)
-* Antes de iniciar o jogo, perguntar qual lado você quer jogar, amarelo ou vermelho, e também perguntar se você quer jogar contra um robô ou contra outra pessoa.
+* Antes de iniciar o jogo, perguntar qual lado você quer jogar, amarelo ou vermelho, e também perguntar se você quer jogar contra um robô ou contra outra pessoa. Concluído
+* Se uma peça estiver em killing spree só ela que pode mexer.
 * Implementar botão pra passar a vez!?
 
 ## IDEIAS INTERESSANTES
