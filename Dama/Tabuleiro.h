@@ -15,6 +15,10 @@ public:
     void mostra();
     int getColor(int i, int j);
     void setColor(int i , int j, int color);
+    int get_num_amarelas(void);
+    int get_num_vermelhas(void);
+    void set_num_amarelas(int n);
+    void set_num_vermelhas(int n);
 };
 
 Tabuleiro::Tabuleiro()
@@ -86,6 +90,22 @@ int Tabuleiro::getColor(int i, int j){
     {
         return 3;
     }
+}
+
+int Tabuleiro::get_num_vermelhas(void){
+    return num_pecas_vermelhas;
+}
+
+int Tabuleiro::get_num_amarelas(void){
+    return num_pecas_amarelas;
+}
+
+void Tabuleiro::set_num_vermelhas(int n){
+    num_pecas_vermelhas = n;
+}
+
+void Tabuleiro::set_num_amarelas(int n){
+    num_pecas_amarelas = n;
 }
 
 void Tabuleiro::setColor(int i, int j, int color){
