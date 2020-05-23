@@ -7,7 +7,7 @@
 Window w(-0.5, 5.5, -0.5, 5.5, 800, 800);
 Tabuleiro tabuleiro;
 
-bool peca_bool = false, vez = false, killing_spree = false, menu_var = true;
+bool peca_bool = false, vez = false, killing_spree = false, menu_var = true, acabou = false;
 float mouse_x, mouse_y;
 int cor_peca = 2;
 int peca_x0, peca_y0;
@@ -181,138 +181,138 @@ void Botao_mouse(int botao, int state, int x, int y)
                     //peca_x0 = peca_x;
                     //peca_y0 = peca_y;
                 }
-                }
-                else
+            }
+            else
+            {
+                /* soltou a peca */
+                if (state == GLUT_UP && peca_bool == true)
                 {
-                    /* soltou a peca */
-                    if (state == GLUT_UP && peca_bool == true)
+                    /* soltou em um espaco vazio */
+                    if (tabuleiro.getColor(peca_y, peca_x) == 2)
                     {
-                        /* soltou em um espaco vazio */
-                        if (tabuleiro.getColor(peca_y, peca_x) == 2)
+                        int dif_peca_x, dif_peca_y;
+                        dif_peca_x = peca_x - peca_x0;
+                        dif_peca_y = peca_y - peca_y0;
+
+                        /* caso em que so se movimenta a peca */
+                        if (fabs(dif_peca_x) <= 1 && fabs(dif_peca_y) <= 1)
                         {
-                            int dif_peca_x, dif_peca_y;
-                            dif_peca_x = peca_x - peca_x0;
-                            dif_peca_y = peca_y - peca_y0;
+                            tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                            peca_bool = false;
+                            if (!(peca_x == peca_x0 && peca_y == peca_y0))
+                                vez = !vez;
+                            glutPostRedisplay();
+                            killing_spree = false;
 
-                            /* caso em que so se movimenta a peca */
-                            if (fabs(dif_peca_x) <= 1 && fabs(dif_peca_y) <= 1)
+                        } /* caso em que se come uma peca */
+                        else if ((fabs(dif_peca_y) + fabs(dif_peca_x) == 2) or (fabs(dif_peca_y) + fabs(dif_peca_x) == 4))
+                        {
+                            int comeu = 0;
+
+                            switch (dif_peca_x + 3 * dif_peca_y)
                             {
-                                tabuleiro.setColor(peca_y, peca_x, cor_peca);
-                                peca_bool = false;
-                                if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                    vez = !vez;
-                                glutPostRedisplay();
-                                killing_spree = false;
-
-                            } /* caso em que se come uma peca */
-                            else if ((fabs(dif_peca_y) + fabs(dif_peca_x) == 2) or (fabs(dif_peca_y) + fabs(dif_peca_x) == 4))
-                            {
-                                int comeu = 0;
-
-                                switch (dif_peca_x + 3 * dif_peca_y)
+                            case 2:
+                                if (tabuleiro.getColor(peca_y, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y, peca_x - 1))
                                 {
-                                case 2:
-                                    if (tabuleiro.getColor(peca_y, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y, peca_x - 1))
-                                    {
-                                        tabuleiro.setColor(peca_y, peca_x - 1, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
-                                case -4:
-                                    if (tabuleiro.getColor(peca_y + 1, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x - 1))
-                                    {
-                                        tabuleiro.setColor(peca_y + 1, peca_x - 1, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
-                                case -6:
-                                    if (tabuleiro.getColor(peca_y + 1, peca_x) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x))
-                                    {
-                                        tabuleiro.setColor(peca_y + 1, peca_x, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
-                                case -8:
-                                    if (tabuleiro.getColor(peca_y + 1, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x + 1))
-                                    {
-                                        tabuleiro.setColor(peca_y + 1, peca_x + 1, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
-                                case -2:
-                                    if (tabuleiro.getColor(peca_y, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y, peca_x + 1))
-                                    {
-                                        tabuleiro.setColor(peca_y, peca_x + 1, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
-                                case 4:
-                                    if (tabuleiro.getColor(peca_y - 1, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x + 1))
-                                    {
-                                        tabuleiro.setColor(peca_y - 1, peca_x + 1, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
-                                case 6:
-                                    if (tabuleiro.getColor(peca_y - 1, peca_x) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x))
-                                    {
-                                        tabuleiro.setColor(peca_y - 1, peca_x, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
-                                case 8:
-                                    if (tabuleiro.getColor(peca_y - 1, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x - 1))
-                                    {
-                                        tabuleiro.setColor(peca_y - 1, peca_x - 1, 2);
-                                        comeu = !comeu;
-                                    }
-                                    break;
+                                    tabuleiro.setColor(peca_y, peca_x - 1, 2);
+                                    comeu = !comeu;
                                 }
-                                if (comeu)
+                                break;
+                            case -4:
+                                if (tabuleiro.getColor(peca_y + 1, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x - 1))
                                 {
-                                    if (cor_peca)
-                                    {
-                                        tabuleiro.set_num_vermelhas(tabuleiro.get_num_vermelhas() - 1);
-                                    }
-                                    else
-                                    {
-                                        tabuleiro.set_num_amarelas(tabuleiro.get_num_amarelas() - 1);
-                                    }
-
-                                    /* nao existe pecas de uma cor. Jogo acabou */
-                                    if (tabuleiro.get_num_vermelhas() == 0 or tabuleiro.get_num_amarelas() == 0)
-                                    {
-                                        exit(0);
-                                    }
-                                    tabuleiro.setColor(peca_y, peca_x, cor_peca);
-                                    peca_x0 = peca_x;
-                                    peca_y0 = peca_y;
-                                    peca_bool = false;
-                                    killing_spree = true;
-                                    glutPostRedisplay();
+                                    tabuleiro.setColor(peca_y + 1, peca_x - 1, 2);
+                                    comeu = !comeu;
+                                }
+                                break;
+                            case -6:
+                                if (tabuleiro.getColor(peca_y + 1, peca_x) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x))
+                                {
+                                    tabuleiro.setColor(peca_y + 1, peca_x, 2);
+                                    comeu = !comeu;
+                                }
+                                break;
+                            case -8:
+                                if (tabuleiro.getColor(peca_y + 1, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y + 1, peca_x + 1))
+                                {
+                                    tabuleiro.setColor(peca_y + 1, peca_x + 1, 2);
+                                    comeu = !comeu;
+                                }
+                                break;
+                            case -2:
+                                if (tabuleiro.getColor(peca_y, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y, peca_x + 1))
+                                {
+                                    tabuleiro.setColor(peca_y, peca_x + 1, 2);
+                                    comeu = !comeu;
+                                }
+                                break;
+                            case 4:
+                                if (tabuleiro.getColor(peca_y - 1, peca_x + 1) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x + 1))
+                                {
+                                    tabuleiro.setColor(peca_y - 1, peca_x + 1, 2);
+                                    comeu = !comeu;
+                                }
+                                break;
+                            case 6:
+                                if (tabuleiro.getColor(peca_y - 1, peca_x) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x))
+                                {
+                                    tabuleiro.setColor(peca_y - 1, peca_x, 2);
+                                    comeu = !comeu;
+                                }
+                                break;
+                            case 8:
+                                if (tabuleiro.getColor(peca_y - 1, peca_x - 1) != 2 && cor_peca != tabuleiro.getColor(peca_y - 1, peca_x - 1))
+                                {
+                                    tabuleiro.setColor(peca_y - 1, peca_x - 1, 2);
+                                    comeu = !comeu;
+                                }
+                                break;
+                            }
+                            if (comeu)
+                            {
+                                if (cor_peca)
+                                {
+                                    tabuleiro.set_num_vermelhas(tabuleiro.get_num_vermelhas() - 1);
                                 }
                                 else
                                 {
-                                    tabuleiro.setColor(peca_y0, peca_x0, cor_peca);
-                                    peca_bool = false;
-                                    glutPostRedisplay();
+                                    tabuleiro.set_num_amarelas(tabuleiro.get_num_amarelas() - 1);
                                 }
-                            } /* caso em que se fez um movimento invalido */
+
+                                /* nao existe pecas de uma cor. Jogo acabou */
+                                if (tabuleiro.get_num_vermelhas() == 0 or tabuleiro.get_num_amarelas() == 0)
+                                {
+                                    exit(0);
+                                }
+                                tabuleiro.setColor(peca_y, peca_x, cor_peca);
+                                peca_x0 = peca_x;
+                                peca_y0 = peca_y;
+                                peca_bool = false;
+                                killing_spree = true;
+                                glutPostRedisplay();
+                            }
                             else
                             {
                                 tabuleiro.setColor(peca_y0, peca_x0, cor_peca);
                                 peca_bool = false;
                                 glutPostRedisplay();
                             }
-                        }
+                        } /* caso em que se fez um movimento invalido */
                         else
                         {
                             tabuleiro.setColor(peca_y0, peca_x0, cor_peca);
+                            peca_bool = false;
+                            glutPostRedisplay();
                         }
-                        peca_bool = false;
-                        glutPostRedisplay();
                     }
+                    else
+                    {
+                        tabuleiro.setColor(peca_y0, peca_x0, cor_peca);
+                    }
+                    peca_bool = false;
+                    glutPostRedisplay();
                 }
+            }
         }
         if (menu_var == true)
         {
@@ -339,6 +339,13 @@ void Botao_mouse(int botao, int state, int x, int y)
     }
 }
 
+void Teclado(unsigned char key, int x, int y)
+{
+    if ((key == 'F') || (key == 'f'))
+    {
+    }
+}
+
 void Botao_mov_mouse(int x, int y)
 {
     cout << "Botao Movimento " << x << ", " << y << endl;
@@ -354,6 +361,7 @@ int main(int argc, char **argv)
     glutInitWindowSize(w.getDIMX(), w.getDIMY());
     glutCreateWindow("Damma");
     config();
+    glutKeyboardFunc(Teclado);
     glutMouseFunc(Botao_mouse);
     glutMotionFunc(Botao_mov_mouse);
     glutDisplayFunc(display);
