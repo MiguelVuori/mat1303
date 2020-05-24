@@ -102,6 +102,39 @@ void COM()
                             }
                         }
                     }
+                    for (int m = -2; m < 3; m += 2)
+                    {
+                        for (int n = -2; n < 3; n+= 2)
+                        {
+                            if (i + m < 0 || i + m > 5)
+                                n = 2;
+                            else if (tabuleiro.getColor(i + m, j + n) == 2)
+                            {
+                                tabuleiro.setColor(i, j, 2);
+                                tabuleiro.setColor(i + m, j + n, 1);
+                                if (n != 0) {
+                                    if(n>0)
+                                        n--;
+                                    else
+                                        n++;
+                                    
+                                }
+                                if (m != 0) {
+                                    if(m>0)
+                                        m--;
+                                    else
+                                        m++;
+                                    
+                                }
+                                tabuleiro.setColor(i + m, j + n, 2);
+                                tabuleiro.set_num_vermelhas(tabuleiro.get_num_vermelhas() - 1);
+                                i = 5;
+                                j = 5;
+                                m = 2;
+                                n = 2;
+                            }
+                        }
+                    }
                 }
             }
             else
@@ -118,6 +151,44 @@ void COM()
                             {
                                 tabuleiro.setColor(i, j, 2);
                                 tabuleiro.setColor(i + m, j + n, 1);
+                                i = 5;
+                                j = 5;
+                                m = 2;
+                                n = 2;
+                            }
+                        }
+                    }
+
+                    for (int m = -2; m < 3; m += 2)
+                    {
+                        for (int n = -2; n < 3; n+= 2)
+                        {
+                            if (i + m < 0 || i + m > 5)
+                                n = 2;
+                            else if (tabuleiro.getColor(i + m, j + n) == 2)
+                            {
+                                tabuleiro.setColor(i, j, 2);
+                                tabuleiro.setColor(i + m, j + n, 0);
+                                if (n != 0) {
+                                    if(n>0)
+                                        n--;
+                                    else
+                                        n++;
+                                    
+                                }
+                                if (m != 0) {
+                                    if(m>0)
+                                        m--;
+                                    else
+                                        m++;
+                                    
+                                }
+                                tabuleiro.setColor(i + m, j + n, 2);
+                                tabuleiro.set_num_amarelas(tabuleiro.get_num_amarelas() - 1);
+                                i = 5;
+                                j = 5;
+                                m = 2;
+                                n = 2;
                             }
                         }
                     }
