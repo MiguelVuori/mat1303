@@ -146,7 +146,7 @@ void Botao_mouse(int botao, int state, int x, int y)
             /* clicou com o mouse */
             if (state == GLUT_DOWN)
             {
-                //esse if é pra impedir que você puxe a peça clicando fora do tabuleiro <------- se der erro comenta esse if!!!!!!!
+                //esse if é pra impedir que você puxe a peça clicando fora do tabuleiro <------ se der erro comenta esse if!!!!!!!
                 if (clique_x >= 0.0 && clique_x <= 5.0 && clique_y >= 0.0 && clique_y <= 5.0)
                 {
                     if (peca_x <= 4 && peca_y <= 4 && peca_x >= 0 && peca_y >= 0)
