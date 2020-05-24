@@ -57,7 +57,6 @@ void menu()
     glEnd();
     glColor3f(0, 0, 0);
     width = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, palavra2);
-    cout << width << "\n";
     glRasterPos2f(1.5 - width / 200.0, 1.5);
     len = strlen((char *)palavra2);
     for (i = 0; i < len; i++)
@@ -65,7 +64,6 @@ void menu()
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, palavra2[i]);
     }
     width = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, palavra3);
-    cout << width << "\n";
     glRasterPos2f(3.85 - width / 200.0, 1.5);
     len = strlen((char *)palavra3);
     for (i = 0; i < len; i++)
@@ -83,55 +81,88 @@ void COM()
         {
             if (color == 'v')
             {
-                if (tabuleiro.getColor(i, j) == 1)
+                if (tabuleiro.getColor(i, j) == 1 || tabuleiro.getColor(i, j) == 4)
                 {
+                    bool andou = false;
+                    int corpeca = tabuleiro.getColor(i, j);
                     for (int m = -1; m < 2; m++)
                     {
                         for (int n = -1; n < 2; n++)
                         {
                             if (i + m < 0 || i + m > 5)
-                                n = 2;
+                                break;
                             else if (tabuleiro.getColor(i + m, j + n) == 2)
                             {
                                 tabuleiro.setColor(i, j, 2);
-                                tabuleiro.setColor(i + m, j + n, 1);
+                                if (i + m == 0)
+                                    tabuleiro.setColor(i + m, j + n, 4);
+                                else
+                                    tabuleiro.setColor(i + m, j + n, corpeca);
                                 i = 5;
                                 j = 5;
                                 m = 2;
                                 n = 2;
+                                andou = true;
                             }
                         }
                     }
-                    for (int m = -2; m < 3; m += 2)
+
+                    if (andou == false)
                     {
-                        for (int n = -2; n < 3; n+= 2)
+                        for (int m = -2; m < 3; m += 2)
                         {
-                            if (i + m < 0 || i + m > 5)
-                                n = 2;
-                            else if (tabuleiro.getColor(i + m, j + n) == 2)
+                            for (int n = -2; n < 3; n += 2)
                             {
-                                tabuleiro.setColor(i, j, 2);
-                                tabuleiro.setColor(i + m, j + n, 1);
-                                if (n != 0) {
-                                    if(n>0)
-                                        n--;
-                                    else
-                                        n++;
-                                    
+                                if (i + m < 0 || i + m > 5)
+                                    break;
+                                else if (tabuleiro.getColor(i + m, j + n) == 2)
+                                {
+                                    int aux1, aux2;
+                                    aux1 = m;
+                                    aux2 = n;
+                                    if (aux1 != 0)
+                                    {
+                                        if (n > 0)
+                                            aux1--;
+                                        else
+                                            aux1++;
+                                    }
+                                    if (aux2 != 0)
+                                    {
+                                        if (aux2 > 0)
+                                            aux2--;
+                                        else
+                                            aux2++;
+                                    }
+                                    if (tabuleiro.getColor(i + aux1, j + aux2) != corpeca)
+                                    {
+                                        tabuleiro.setColor(i, j, 2);
+                                        if (i + m == 0)
+                                            tabuleiro.setColor(i + m, j + n, 4);
+                                        else
+                                            tabuleiro.setColor(i + m, j + n, corpeca);
+                                        if (n != 0)
+                                        {
+                                            if (n > 0)
+                                                n--;
+                                            else
+                                                n++;
+                                        }
+                                        if (m != 0)
+                                        {
+                                            if (m > 0)
+                                                m--;
+                                            else
+                                                m++;
+                                            tabuleiro.setColor(i + m, j + n, 2);
+                                            tabuleiro.set_num_vermelhas(tabuleiro.get_num_vermelhas() - 1);
+                                            i = 5;
+                                            j = 5;
+                                            m = 4;
+                                            n = 4;
+                                        }
+                                    }
                                 }
-                                if (m != 0) {
-                                    if(m>0)
-                                        m--;
-                                    else
-                                        m++;
-                                    
-                                }
-                                tabuleiro.setColor(i + m, j + n, 2);
-                                tabuleiro.set_num_vermelhas(tabuleiro.get_num_vermelhas() - 1);
-                                i = 5;
-                                j = 5;
-                                m = 2;
-                                n = 2;
                             }
                         }
                     }
@@ -139,56 +170,88 @@ void COM()
             }
             else
             {
-                if (tabuleiro.getColor(i, j) == 0)
+                bool andou = false;
+                int corpeca = tabuleiro.getColor(i, j);
+                if (tabuleiro.getColor(i, j) == 0 || tabuleiro.getColor(i, j) == 3)
                 {
                     for (int m = -1; m < 2; m++)
                     {
                         for (int n = -1; n < 2; n++)
                         {
                             if (i + m < 0 || i + m > 5)
-                                n = 2;
+                                break;
                             else if (tabuleiro.getColor(i + m, j + n) == 2)
                             {
                                 tabuleiro.setColor(i, j, 2);
-                                tabuleiro.setColor(i + m, j + n, 1);
+                                if (i + m == 0)
+                                    tabuleiro.setColor(i + m, j + n, 3);
+                                else
+                                    tabuleiro.setColor(i + m, j + n, corpeca);
                                 i = 5;
                                 j = 5;
                                 m = 2;
                                 n = 2;
+                                andou = true;
                             }
                         }
                     }
 
-                    for (int m = -2; m < 3; m += 2)
+                    if (andou == false)
                     {
-                        for (int n = -2; n < 3; n+= 2)
+                        for (int m = -2; m < 3; m += 2)
                         {
-                            if (i + m < 0 || i + m > 5)
-                                n = 2;
-                            else if (tabuleiro.getColor(i + m, j + n) == 2)
+                            for (int n = -2; n < 3; n += 2)
                             {
-                                tabuleiro.setColor(i, j, 2);
-                                tabuleiro.setColor(i + m, j + n, 0);
-                                if (n != 0) {
-                                    if(n>0)
-                                        n--;
-                                    else
-                                        n++;
-                                    
+                                if (i + m < 0 || i + m > 5)
+                                    n = 2;
+                                else if (tabuleiro.getColor(i + m, j + n) == 2)
+                                {
+                                    int aux1, aux2;
+                                    aux1 = m;
+                                    aux2 = n;
+                                    if (aux1 != 0)
+                                    {
+                                        if (n > 0)
+                                            aux1--;
+                                        else
+                                            aux1++;
+                                    }
+                                    if (aux2 != 0)
+                                    {
+                                        if (aux2 > 0)
+                                            aux2--;
+                                        else
+                                            aux2++;
+                                    }
+                                    if (tabuleiro.getColor(i + aux1, j + aux2) != corpeca)
+                                    {
+                                        tabuleiro.setColor(i, j, 2);
+                                        if (i + m == 0)
+                                            tabuleiro.setColor(i + m, j + n, 3);
+                                        else
+                                            tabuleiro.setColor(i + m, j + n, corpeca);
+                                        if (n != 0)
+                                        {
+                                            if (n > 0)
+                                                n--;
+                                            else
+                                                n++;
+                                        }
+                                        if (m != 0)
+                                        {
+                                            if (m > 0)
+                                                m--;
+                                            else
+                                                m++;
+                                        }
+                                        tabuleiro.setColor(i + m, j + n, 2);
+                                        tabuleiro.set_num_amarelas(tabuleiro.get_num_amarelas() - 1);
+                                        i = 5;
+                                        j = 5;
+                                        m = 2;
+                                        n = 2;
+                                    }
                                 }
-                                if (m != 0) {
-                                    if(m>0)
-                                        m--;
-                                    else
-                                        m++;
-                                    
-                                }
-                                tabuleiro.setColor(i + m, j + n, 2);
-                                tabuleiro.set_num_amarelas(tabuleiro.get_num_amarelas() - 1);
-                                i = 5;
-                                j = 5;
-                                m = 2;
-                                n = 2;
                             }
                         }
                     }
@@ -276,10 +339,9 @@ void Botao_mouse(int botao, int state, int x, int y)
                 if (clique_x >= 0.0 && clique_x <= 5.0 && clique_y >= 0.0 && clique_y <= 5.0)
                 {
                     if (peca_x <= 4 && peca_y <= 4 && peca_x >= 0 && peca_y >= 0)
-                    {   
+                    {
                         if (killing_spree == true && peca_x0 == peca_x && peca_y == peca_y0)
                         {
-                            cout << "pegueierrado!";
                             cor_peca = tabuleiro.getColor(peca_y, peca_x);
                             if ((cor_peca == 0 || cor_peca == 3) && vez == false)
                             {
@@ -291,34 +353,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
                             }
-                            cout << "botao esquerdo pressionado" << x << ", " << y << endl;
                             peca_x0 = peca_x;
                             peca_y0 = peca_y;
                         }
                         else if (!killing_spree)
                         {
-                    
+
                             cor_peca = tabuleiro.getColor(peca_y, peca_x);
                             if ((cor_peca == 0 || cor_peca == 3) && vez == false)
                             {
-                                cout << "peguei1!";
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
                             }
                             else if ((cor_peca == 1 || cor_peca == 4) && vez == true)
                             {
-                                cout << "peguei2!";
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
                             }
-                            cout << "botao esquerdo pressionado" << x << ", " << y << endl;
                             peca_x0 = peca_x;
                             peca_y0 = peca_y;
                         }
                     }
-                    //cout << "botao esquerdo pressionado" << x << ", " << y << endl;
-                    //peca_x0 = peca_x;
-                    //peca_y0 = peca_y;
                 }
             }
             else
@@ -489,11 +544,8 @@ void Botao_mouse(int botao, int state, int x, int y)
                         //trata dos casos da peça rainha
                         else if ((cor_peca == 3 || cor_peca == 4) && ((fabs(dif_peca_x) == fabs(dif_peca_y)) || (dif_peca_x == 0 && dif_peca_y <= 4) || (dif_peca_y == 0 && dif_peca_x <= 4)))
                         {
-                            //int dif_peca_x, dif_peca_y;
                             int localizacao;
                             int comeu = 0;
-                            //dif_peca_x = peca_x - peca_x0;
-                            //dif_peca_y = peca_y - peca_y0;
 
                             if (dif_peca_x > 0)
                             {
@@ -577,7 +629,6 @@ void Botao_mouse(int botao, int state, int x, int y)
                                                 glutPostRedisplay();
                                             }
                                         }
-                                        //killing_spree = false;
 
                                     } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
@@ -910,13 +961,6 @@ void Botao_mouse(int botao, int state, int x, int y)
                                     killing_spree = true;
                                     glutPostRedisplay();
                                 }
-                                /*
-                                else
-                                {
-                                    tabuleiro.setColor(peca_y0, peca_x0, cor_peca);
-                                    peca_bool = false;
-                                    glutPostRedisplay();
-                                }*/
                             }
                             else
                             {
@@ -978,6 +1022,9 @@ void Botao_mouse(int botao, int state, int x, int y)
                     Tabuleiro tab(color);
                     tabuleiro = tab;
                     glutPostRedisplay();
+
+                    COM();
+                    vez = !vez;
                 }
             }
         }
@@ -994,10 +1041,19 @@ void Teclado(unsigned char key, int x, int y)
             cout << "Vermelho vence!\n";
         exit(0);
     }
-    if ((key == 'P') || (key == 'p'))
+    if ((key == 'P') || (key == 'p') && (killing_spree == true))
     {
-        vez = !vez;
-        killing_spree = false;
+        if (vs_com == true)
+        {
+            killing_spree = false;
+            COM();
+            glutPostRedisplay();
+        }
+        else
+        {
+            vez = !vez;
+            killing_spree = false;
+        }
     }
 }
 
