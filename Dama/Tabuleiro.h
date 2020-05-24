@@ -122,7 +122,6 @@ void Tabuleiro::mostra()
                 glColor3f(0.5, 0.5, 0);
                 glVertex2f(0.5 + j, 0.5 + i);
             }
-            
         }
     }
     glEnd();
@@ -132,7 +131,6 @@ int Tabuleiro::getColor(int i, int j)
 {
     if (i <= 4 && j <= 4 && i >= 0 && j >= 0)
     {
-        cout << i << j << "cor " << Mat_Tab[i][j] << "\n";
         return Mat_Tab[i][j];
     }
     else

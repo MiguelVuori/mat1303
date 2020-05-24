@@ -3,11 +3,13 @@
 #include "Window.h"
 #include <stdlib.h>
 #include <string.h>
+#include <chrono>
+#include <thread>
 
 Window w(-0.5, 5.5, -0.5, 5.5, 800, 800);
 Tabuleiro tabuleiro;
 
-bool peca_bool = false, vez = false, killing_spree = false, menu_var = true, acabou = false;
+bool peca_bool = false, vez = false, killing_spree = false, menu_var = true, acabou = false, vs_com = false;
 float mouse_x, mouse_y;
 int cor_peca = 2;
 int peca_x0, peca_y0;
@@ -69,6 +71,59 @@ void menu()
     for (i = 0; i < len; i++)
     {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, palavra3[i]);
+    }
+}
+
+void COM()
+{
+    this_thread::sleep_for(std::chrono::milliseconds(100));
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            if (color == 'v')
+            {
+                if (tabuleiro.getColor(i, j) == 1)
+                {
+                    for (int m = -1; m < 2; m++)
+                    {
+                        for (int n = -1; n < 2; n++)
+                        {
+                            if (i + m < 0 || i + m > 5)
+                                n = 2;
+                            else if (tabuleiro.getColor(i + m, j + n) == 2)
+                            {
+                                tabuleiro.setColor(i, j, 2);
+                                tabuleiro.setColor(i + m, j + n, 1);
+                                i = 5;
+                                j = 5;
+                                m = 2;
+                                n = 2;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (tabuleiro.getColor(i, j) == 0)
+                {
+                    for (int m = -1; m < 2; m++)
+                    {
+                        for (int n = -1; n < 2; n++)
+                        {
+                            if (i + m < 0 || i + m > 5)
+                                n = 2;
+                            else if (tabuleiro.getColor(i + m, j + n) == 2)
+                            {
+                                tabuleiro.setColor(i, j, 2);
+                                tabuleiro.setColor(i + m, j + n, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -173,12 +228,12 @@ void Botao_mouse(int botao, int state, int x, int y)
                         {
                             cout << "peguei!";
                             cor_peca = tabuleiro.getColor(peca_y, peca_x);
-                            if ((cor_peca == 0 || cor_peca == 3)&& vez == false)
+                            if ((cor_peca == 0 || cor_peca == 3) && vez == false)
                             {
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
                             }
-                            else if ((cor_peca == 1 || cor_peca == 4)&& vez == true)
+                            else if ((cor_peca == 1 || cor_peca == 4) && vez == true)
                             {
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
@@ -204,37 +259,43 @@ void Botao_mouse(int botao, int state, int x, int y)
                         int dif_peca_x, dif_peca_y;
                         dif_peca_x = peca_x - peca_x0;
                         dif_peca_y = peca_y - peca_y0;
-                        
+
                         /* movimentacao de peca comum */
                         if (cor_peca == 0 or cor_peca == 1)
                         {
                             /* caso em que so se movimenta a peca */
                             if (fabs(dif_peca_x) <= 1 && fabs(dif_peca_y) <= 1)
-                            {                                
+                            {
 
                                 /* testo se vira rainha */
                                 if ((color == 'a') && ((cor_peca == 1 && peca_y == 4) || (cor_peca == 0 && peca_y == 0)))
                                 {
-                                    
-                                    tabuleiro.setColor(peca_y,peca_x,cor_peca + 3);
-                
+
+                                    tabuleiro.setColor(peca_y, peca_x, cor_peca + 3);
                                 }
                                 else if ((color == 'v') && ((cor_peca == 1 && peca_y == 0) || (cor_peca == 0 && peca_y == 4)))
                                 {
-                                    tabuleiro.setColor(peca_y,peca_x,cor_peca + 3);
+                                    tabuleiro.setColor(peca_y, peca_x, cor_peca + 3);
                                 }
                                 else
                                 {
                                     tabuleiro.setColor(peca_y, peca_x, cor_peca);
-                            
                                 }
 
                                 peca_bool = false;
                                 if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                    vez = !vez;
-
-                                glutPostRedisplay();
-
+                                {
+                                    if (vs_com == true)
+                                    {
+                                        glutPostRedisplay();
+                                        COM();
+                                    }
+                                    else
+                                    {
+                                        vez = !vez;
+                                        glutPostRedisplay();
+                                    }
+                                }
                                 killing_spree = false;
 
                             } /* caso em que se come uma peca */
@@ -313,8 +374,13 @@ void Botao_mouse(int botao, int state, int x, int y)
                                     }
 
                                     /* nao existe pecas de uma cor. Jogo acabou */
-                                    if (tabuleiro.get_num_vermelhas() == 0 or tabuleiro.get_num_amarelas() == 0)
+                                    if (tabuleiro.get_num_vermelhas() == 0 || tabuleiro.get_num_amarelas() == 0)
                                     {
+                                        if (vez == false)
+                                            cout << "Vermelho vence!\n";
+                                        else
+                                            cout << "Amarelo vence!\n";
+
                                         exit(0);
                                     }
                                     tabuleiro.setColor(peca_y, peca_x, cor_peca);
@@ -325,17 +391,15 @@ void Botao_mouse(int botao, int state, int x, int y)
 
                                     if ((color == 'a') && ((cor_peca == 1 && peca_y == 4) || (cor_peca == 0 && peca_y == 0)))
                                     {
-                                        
-                                        tabuleiro.setColor(peca_y,peca_x,cor_peca + 3);
-                    
+
+                                        tabuleiro.setColor(peca_y, peca_x, cor_peca + 3);
                                     }
                                     else if ((color == 'v') && ((cor_peca == 1 && peca_y == 0) || (cor_peca == 0 && peca_y == 4)))
                                     {
-                                        tabuleiro.setColor(peca_y,peca_x,cor_peca + 3);
+                                        tabuleiro.setColor(peca_y, peca_x, cor_peca + 3);
                                     }
-                                    
-                                    glutPostRedisplay();
 
+                                    glutPostRedisplay();
                                 }
                                 else
                                 {
@@ -345,6 +409,7 @@ void Botao_mouse(int botao, int state, int x, int y)
                                 }
                             }
                         }
+                        //trata dos casos da peça rainha
                         else if ((cor_peca == 3 || cor_peca == 4) && ((fabs(dif_peca_x) == fabs(dif_peca_y)) || (dif_peca_x == 0 && dif_peca_y <= 4) || (dif_peca_y == 0 && dif_peca_x <= 4)))
                         {
                             //int dif_peca_x, dif_peca_y;
@@ -417,19 +482,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
                                     }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
-
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
                                         killing_spree = false;
 
-                                    }/* so existe um elemento que pode ser comido */
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0, peca_x0 + local_de_comida, 2);
@@ -451,19 +524,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
-                                    } 
+                                    }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
-
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
                                         killing_spree = false;
-                                        
-                                    }/* so existe um elemento que pode ser comido */
+
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0 - local_de_comida, peca_x0 + local_de_comida, 2);
@@ -485,19 +566,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
                                     }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
-
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
                                         killing_spree = false;
-                                        
-                                    }/* so existe um elemento que pode ser comido */
+
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0 - local_de_comida, peca_x0, 2);
@@ -519,19 +608,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
-                                    } 
+                                    }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
-
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
                                         killing_spree = false;
-                                        
-                                    }/* so existe um elemento que pode ser comido */
+
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0 - local_de_comida, peca_x0 - local_de_comida, 2);
@@ -553,19 +650,28 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
-                                    } 
+                                    }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
 
                                         killing_spree = false;
-                                        
-                                    }/* so existe um elemento que pode ser comido */
+
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0, peca_x0 - local_de_comida, 2);
@@ -586,19 +692,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
-                                    } 
+                                    }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
-
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
                                         killing_spree = false;
-                                        
-                                    }/* so existe um elemento que pode ser comido */
+
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0 + local_de_comida, peca_x0 - local_de_comida, 2);
@@ -619,19 +733,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
-                                    } 
+                                    }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
-
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
                                         killing_spree = false;
-                                        
-                                    }/* so existe um elemento que pode ser comido */
+
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0 + local_de_comida, peca_x0, 2);
@@ -652,19 +774,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                                             comida_valida = comida_valida + 1;
                                             local_de_comida = i;
                                         }
-
-                                    } 
+                                    }
                                     if (comida_valida == 0)
                                     {
                                         tabuleiro.setColor(peca_y, peca_x, cor_peca);
                                         peca_bool = false;
                                         if (!(peca_x == peca_x0 && peca_y == peca_y0))
-                                            vez = !vez;
-                                        glutPostRedisplay();
-
+                                        {
+                                            if (vs_com == true)
+                                            {
+                                                glutPostRedisplay();
+                                                COM();
+                                            }
+                                            else
+                                            {
+                                                vez = !vez;
+                                                glutPostRedisplay();
+                                            }
+                                        }
                                         killing_spree = false;
-                                        
-                                    }/* so existe um elemento que pode ser comido */
+
+                                    } /* so existe um elemento que pode ser comido */
                                     else if (comida_valida == 1)
                                     {
                                         tabuleiro.setColor(peca_y0 + local_de_comida, peca_x0 + local_de_comida, 2);
@@ -737,7 +867,7 @@ void Botao_mouse(int botao, int state, int x, int y)
         {
             if (clique_y >= 1.0 && clique_y <= 2.0)
             {
-                if ((clique_x >= 0.25 && clique_x < 1.25) || (clique_x >= 2.75 && clique_x < 3.75))
+                if (clique_x >= 0.25 && clique_x < 1.25)
                 {
                     color = 'v';
                     menu_var = false;
@@ -745,8 +875,27 @@ void Botao_mouse(int botao, int state, int x, int y)
                     tabuleiro = tab;
                     glutPostRedisplay();
                 }
-                else if ((clique_x > 1.25 && clique_x <= 2.25) || (clique_x > 3.75 && clique_x <= 4.75))
+                else if (clique_x > 1.25 && clique_x <= 2.25)
                 {
+                    color = 'a';
+                    menu_var = false;
+                    Tabuleiro tab(color);
+                    tabuleiro = tab;
+                    glutPostRedisplay();
+                }
+                else if (clique_x >= 2.75 && clique_x < 3.75)
+                {
+                    vs_com = true;
+                    color = 'v';
+                    menu_var = false;
+                    Tabuleiro tab(color);
+                    tabuleiro = tab;
+                    glutPostRedisplay();
+                }
+
+                else if (clique_x > 3.75 && clique_x <= 4.75)
+                {
+                    vs_com = true;
                     color = 'a';
                     menu_var = false;
                     Tabuleiro tab(color);
@@ -762,12 +911,20 @@ void Teclado(unsigned char key, int x, int y)
 {
     if ((key == 'F') || (key == 'f'))
     {
+        if (vez == false)
+            cout << "Amarelo vence!\n";
+        else
+            cout << "Vermelho vence!\n";
+        exit(0);
+    }
+    if ((key == 'P') || (key == 'p'))
+    {
+        vez = !vez;
     }
 }
 
 void Botao_mov_mouse(int x, int y)
 {
-    cout << "Botao Movimento " << x << ", " << y << endl;
     mouse_x = x;
     mouse_y = y;
     glutPostRedisplay();
