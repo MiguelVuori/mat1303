@@ -112,6 +112,17 @@ void Tabuleiro::mostra()
                 glColor3f(1, 1, 0);
                 glVertex2f(0.5 + j, 0.5 + i);
             }
+            else if (Mat_Tab[i][j] == 3)
+            {
+                glColor3f(0.5, 0, 0);
+                glVertex2f(0.5 + j, 0.5 + i);
+            }
+            else if (Mat_Tab[i][j] == 4)
+            {
+                glColor3f(0.5, 0.5, 0);
+                glVertex2f(0.5 + j, 0.5 + i);
+            }
+            
         }
     }
     glEnd();

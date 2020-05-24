@@ -155,12 +155,12 @@ void Botao_mouse(int botao, int state, int x, int y)
                         {
                             cout << "peguei!";
                             cor_peca = tabuleiro.getColor(peca_y, peca_x);
-                            if (cor_peca == 0 && vez == false)
+                            if ((cor_peca == 0 || cor_peca == 3) && vez == false)
                             {
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
                             }
-                            else if (cor_peca == 1 && vez == true)
+                            else if ((cor_peca == 1 || cor_peca == 4) && vez == true)
                             {
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
@@ -173,12 +173,12 @@ void Botao_mouse(int botao, int state, int x, int y)
                         {
                             cout << "peguei!";
                             cor_peca = tabuleiro.getColor(peca_y, peca_x);
-                            if (cor_peca == 0 && vez == false)
+                            if ((cor_peca == 0 || cor_peca == 3)&& vez == false)
                             {
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
                             }
-                            else if (cor_peca == 1 && vez == true)
+                            else if ((cor_peca == 1 || cor_peca == 4)&& vez == true)
                             {
                                 tabuleiro.setColor(peca_y, peca_x, 2);
                                 peca_bool = true;
