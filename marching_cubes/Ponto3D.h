@@ -1,9 +1,10 @@
 class Ponto3D
 {
-    private:
+    public:
+
     float x, y, z;
 
-    public:
+
 
     Ponto3D(float x1, float y1, float z1)
     {
@@ -22,8 +23,8 @@ class Ponto3D
 	Ponto3D& operator+=(Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2);
 	Ponto3D& operator-=(Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2);
     Ponto3D& operator=(Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2);
-    float get_x(void);
-    float get_y(void);
-    float get_z(void);
+    //float get_x(void);
+    //float get_y(void);
+    //float get_z(void);
 
 }

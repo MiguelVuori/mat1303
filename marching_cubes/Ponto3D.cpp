@@ -99,9 +99,11 @@ Ponto3D& operator=(Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2)
 	return pt3dPoint1;
 }
 
+/*
 float get_x(void)
     return x;
 float get_y(void)
     return y;
 float get_z(void)
     return z;
+*/

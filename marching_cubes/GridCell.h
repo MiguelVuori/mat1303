@@ -2,18 +2,17 @@
 
 class GridCell
 {
-    private:
-        Ponto3D v[8];
-        float fv[8];
-
     public:
+
+        Ponto3D p[8];
+        float val[8];
 
         GridCell(Ponto3D *v1, float *(f)(Ponto3D))
         {
             for(int i = 0; i < 8; i++)
             {
-                v[i] = v1[i];
-                fv[i] = f(v[i]);
+                p[i] = v1[i];
+                val[i] = f(p[i]);
             }
         }
 

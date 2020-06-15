@@ -193,7 +193,7 @@ void Implicito::visualiza_implicito()
 	}
 }
 
-int Polygonise(GRIDCELL grid,double isolevel,TRIANGLE *triangles)
+int Polygonise(GridCell grid,float isolevel,Triangulo *triangles)
 {
 
 	int i,ntriang;
@@ -563,13 +563,10 @@ int Polygonise(GRIDCELL grid,double isolevel,TRIANGLE *triangles)
    Linearly interpolate the position where an isosurface cuts
    an edge between two vertices, each with their own scalar value
 */
-XYZ VertexInterp(isolevel,p1,p2,valp1,valp2)
-double isolevel;
-XYZ p1,p2;
-double valp1,valp2;
+Ponto3D VertexInterp(float isolevel,Ponto3D p1,Ponto3D p2,float valp1,float valp2)
 {
    double mu;
-   XYZ p;
+   //Ponto3D p;
 
    if (ABS(isolevel-valp1) < 0.00001)
       return(p1);
@@ -578,9 +575,11 @@ double valp1,valp2;
    if (ABS(valp1-valp2) < 0.00001)
       return(p1);
    mu = (isolevel - valp1) / (valp2 - valp1);
-   p.x = p1.x + mu * (p2.x - p1.x);
-   p.y = p1.y + mu * (p2.y - p1.y);
-   p.z = p1.z + mu * (p2.z - p1.z);
+
+   Ponto3D p(p1.x + mu * (p2.x - p1.x), p1.y + mu * (p2.y - p1.y), p1.z + mu * (p2.z - p1.z));
+   //p.x = p1.x + mu * (p2.x - p1.x);
+   //p.y = p1.y + mu * (p2.y - p1.y);
+   //p.z = p1.z + mu * (p2.z - p1.z);
 
    return(p);
 }

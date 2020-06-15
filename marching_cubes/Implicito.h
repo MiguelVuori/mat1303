@@ -1,4 +1,8 @@
 #pragma once
+#include "Ponto3D.h"
+#include "GridCell.h"
+#include "Triangulo.h"
+
 class Implicito
 {
 private:
@@ -33,7 +37,7 @@ public:
 		normal[2] = 3 * z*z - 3 * (x + y + z - 1)*(x + y + z - 1);
 	}
 	void tetraedro(float *v0, float *v1, float *v2, float *v3);
-	int cubes(float *v, float dx, float dy, float dz);
+	int Polygonise(GridCell grid,float isolevel,Triangulo *triangles)
 	void visualiza_implicito();
 };
 
