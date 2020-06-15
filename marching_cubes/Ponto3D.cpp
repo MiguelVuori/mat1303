@@ -1,38 +1,28 @@
-#include "ponto3D.h"
+#include "Ponto3D.h"
 
-Ponto3D operator+(const Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2)
+Ponto3D Ponto3D::operator+(const Ponto3D& pt3dPoint)
 {
-	Ponto3D result;
-
-	result.x = pt3dPoint1.x + pt3dPoint2.x;
-	result.y = pt3dPoint1.y + pt3dPoint2.y;
-	result.z = pt3dPoint1.z + pt3dPoint2.z;
+	Ponto3D result(pt3dPoint.x + x, pt3dPoint.y + y, pt3dPoint.z + z);
 
 	return result;
 }
 
-Ponto3D operator-(const Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2)
+Ponto3D Ponto3D::operator-(const Ponto3D& pt3dPoint)
 {
-	Ponto3D result;
 
-	result.x = pt3dPoint1.x - pt3dPoint2.x;
-	result.y = pt3dPoint1.y - pt3dPoint2.y;
-	result.z = pt3dPoint1.z - pt3dPoint2.z;
+	Ponto3D result(pt3dPoint.x - x, pt3dPoint.y - y, pt3dPoint.z - z);
 
 	return result;
 }
 
-Ponto3D operator*(const Ponto3D& pt3dPoint, float fScale)
+Ponto3D Ponto3D::operator*(float fScale)
 {
-	Ponto3D result;
 
-	result.x = pt3dPoint.x*fScale;
-	result.y = pt3dPoint.y*fScale;
-	result.z = pt3dPoint.z*fScale;
+	Ponto3D result(x * fScale, y * fScale, z * fScale);
 
 	return result;
 }
-
+/*
 Ponto3D operator*(float fScale, const Ponto3D& pt3dPoint)
 {
 	Ponto3D result;
@@ -43,60 +33,54 @@ Ponto3D operator*(float fScale, const Ponto3D& pt3dPoint)
 
 	return result;
 }
-
-Ponto3D operator/(const Ponto3D& pt3dPoint, float fScale)
+*/
+Ponto3D Ponto3D::operator/(float fScale)
 {
-	Ponto3D result;
 
-	result.x = pt3dPoint.x/fScale;
-	result.y = pt3dPoint.y/fScale;
-	result.z = pt3dPoint.z/fScale;
+	Ponto3D result(x / fScale, y / fScale, z / fScale);
 	
 	return result;
 }
 
-Ponto3D& operator*=(Ponto3D& pt3dPoint, float fScale)
+void Ponto3D::operator*=(float fScale)
 {
-	pt3dPoint.x *= fScale;
-	pt3dPoint.y *= fScale;
-	pt3dPoint.z *= fScale;
+	x *= fScale;
+	y *= fScale;
+	z *= fScale;
 
-	return pt3dPoint;
 }
 
-Ponto3D& operator/=(Ponto3D& pt3dPoint, float fScale)
+void Ponto3D::operator/=(float fScale)
 {
-	pt3dPoint.x /= fScale;
-	pt3dPoint.y /= fScale;
-	pt3dPoint.z /= fScale;
+	x /= fScale;
+	y /= fScale;
+	z /= fScale;
 
-	return pt3dPoint;
+
 }
 
-Ponto3D& operator+=(Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2)
+void Ponto3D::operator+=(const Ponto3D& pt3dPoint)
 {
-	pt3dPoint1.x += pt3dPoint2.x;
-	pt3dPoint1.y += pt3dPoint2.y;
-	pt3dPoint1.z += pt3dPoint2.z;
+	x += pt3dPoint.x;
+	y += pt3dPoint.y;
+	z += pt3dPoint.z;
 
-	return pt3dPoint1;
 }
 
-Ponto3D& operator-=(Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2)
+void Ponto3D::operator-=(const Ponto3D& pt3dPoint)
 {
-	pt3dPoint1.x -= pt3dPoint2.x;
-	pt3dPoint1.y -= pt3dPoint2.y;
-	pt3dPoint1.z -= pt3dPoint2.z;
+	x -= pt3dPoint.x;
+	y -= pt3dPoint.y;
+	z -= pt3dPoint.z;
 	
-	return pt3dPoint1;
 }
-Ponto3D& operator=(Ponto3D& pt3dPoint1, const Ponto3D& pt3dPoint2)
+void Ponto3D::operator=(const Ponto3D& pt3dPoint)
 {
-    pt3dPoint1.x = pt3dPoint2.x;
-	pt3dPoint1.y = pt3dPoint2.y;
-	pt3dPoint1.z = pt3dPoint2.z;
+    x = pt3dPoint.x;
+	y = pt3dPoint.y;
+	z = pt3dPoint.z;
 	
-	return pt3dPoint1;
+
 }
 
 /*

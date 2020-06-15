@@ -13,4 +13,4 @@ class Triangulo
         }
 
         void operator=(const Triangulo& t);
-}
+};
