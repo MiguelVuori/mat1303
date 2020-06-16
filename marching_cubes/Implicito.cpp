@@ -1,9 +1,10 @@
-#include "pch.h"
 #include "Implicito.h"
-#include "ponto3D.h"
-#include <glut.h>
+#include "Ponto3D.h"
+#include <GL/glut.h>
+#include <cmath>
+#include "GridCell.h"
 
-
+/*
 void Implicito::tetraedro(float *v0, float *v1, float *v2, float *v3)
 {
 	float w[4];
@@ -157,34 +158,61 @@ void Implicito::tetraedro(float *v0, float *v1, float *v2, float *v3)
 		glEnd();
 	}
 }
+*/
 void Implicito::visualiza_implicito() 
 {
 	float v[8][3];
+	Ponto3D inicio;
+	Ponto3D vetor[8];
+	float vals[8];
 	float x, y, z;
 	float dx, dy, dz;
 	dx = (xmax - xmin) / n;
 	dy = (ymax - ymin) / n;
 	dz = (zmax - zmin) / n;
 
+	inicio.x = xmin;
 	x = xmin;
 	for (int i = 0; i < n; i++) {
 		y = ymin;
+		inicio.y;
 		for (int j = 0; j < n; j++) {
 			z = zmin;
+			inicio.z = zmin;
 			for (int k = 0; k < n; k++) {
-				v[0][0] = x; v[1][0] = x+dx; v[2][0] = x;    v[3][0] = x+dx;
-				v[0][1] = y; v[1][1] = y;    v[2][1] = y+dy; v[3][1] = y+dy;
-				v[0][2] = z; v[1][2] = z;    v[2][2] = z;    v[3][2] = z;
+				vetor[0] = inicio; // determina x, y, z
+				inicio.y = inicio.y + dy;
+				vetor[1] = inicio; // determina x, y + dy, z
+				inicio.x = inicio.x + dx;
+				vetor[2] = inicio; // determina x + dx, y + dy, z
+				inicio.y = inicio.y - dy;
+				vetor[3] = inicio; // determina x + dx, y, z
+				inicio.x = inicio.x - dx; inicio.z = inicio.z + dz;
+				vetor[4] = inicio; //determina x, y, z + dz;
+				inicio.y = inicio.y + dy;
+				vetor[5] = inicio; // determina x, y + dy, z + dz
+				inicio.x = inicio.x + dx;
+				vetor[6] = inicio; // determina x + dx, y + dy, z + dz
+				inicio.y = inicio.y - dy;
+				vetor[7] = inicio; // determina x + dx, y, z + dz
+				for (int m = 0; m < 8; m++){
+					vals[m] = f(vetor[m]);
+				}
+				GridCell grid(vetor, vals);
+				Polygonise(grid, 0);
+				// v[0][0] = x; v[1][0] = x+dx; v[2][0] = x;    v[3][0] = x+dx;
+				// v[0][1] = y; v[1][1] = y;    v[2][1] = y+dy; v[3][1] = y+dy;
+				// v[0][2] = z; v[1][2] = z;    v[2][2] = z;    v[3][2] = z;
 
-				v[4][0] = x;    v[5][0] = x+dx; v[6][0] = x;    v[7][0] = x + dx;
-				v[4][1] = y;    v[5][1] = y;    v[6][1] = y+dy; v[7][1] = y + dy;
-				v[4][2] = z+dz; v[5][2] = z+dz; v[6][2] = z+dz; v[7][2] = z+dz;
-				tetraedro(v[0], v[1], v[3], v[7]); 
-				tetraedro(v[0], v[1], v[5], v[7]);
-				tetraedro(v[0], v[2], v[3], v[7]);
-				tetraedro(v[0], v[2], v[6], v[7]);
-				tetraedro(v[0], v[4], v[5], v[7]);
-				tetraedro(v[0], v[4], v[6], v[7]);
+				// v[4][0] = x;    v[5][0] = x+dx; v[6][0] = x;    v[7][0] = x + dx;
+				// v[4][1] = y;    v[5][1] = y;    v[6][1] = y+dy; v[7][1] = y + dy;
+				// v[4][2] = z+dz; v[5][2] = z+dz; v[6][2] = z+dz; v[7][2] = z+dz;
+				// tetraedro(v[0], v[1], v[3], v[7]); 
+				// tetraedro(v[0], v[1], v[5], v[7]);
+				// tetraedro(v[0], v[2], v[3], v[7]);
+				// tetraedro(v[0], v[2], v[6], v[7]);
+				// tetraedro(v[0], v[4], v[5], v[7]);
+				// tetraedro(v[0], v[4], v[6], v[7]);
 				z += dz;
 			}
 			y += dy;
@@ -193,7 +221,7 @@ void Implicito::visualiza_implicito()
 	}
 }
 
-int Polygonise(GridCell grid,float isolevel,Triangulo *triangles)
+int Implicito::Polygonise(GridCell grid, float isolevel)
 {
 
 	int i,ntriang;
@@ -550,9 +578,12 @@ int Polygonise(GridCell grid,float isolevel,Triangulo *triangles)
 	/* Create the triangle */
 	ntriang = 0;
 	for (i=0;triTable[cubeindex][i]!=-1;i+=3) {
-		triangles[ntriang].p[0] = vertlist[triTable[cubeindex][i  ]];
-		triangles[ntriang].p[1] = vertlist[triTable[cubeindex][i+1]];
-		triangles[ntriang].p[2] = vertlist[triTable[cubeindex][i+2]];
+		glColor3f(0, 0, 1);
+		glBegin(GL_LINE_LOOP);
+			glVertex3f(vertlist[triTable[cubeindex][i]].x, vertlist[triTable[cubeindex][i]].y, vertlist[triTable[cubeindex][i]].z);
+			glVertex3f(vertlist[triTable[cubeindex][i+1]].x, vertlist[triTable[cubeindex][i+1]].y, vertlist[triTable[cubeindex][i+1]].z);
+			glVertex3f(vertlist[triTable[cubeindex][i+2]].x, vertlist[triTable[cubeindex][i+2]].y, vertlist[triTable[cubeindex][i+2]].z);
+		glEnd();
 		ntriang++;
 	}
 
@@ -563,16 +594,16 @@ int Polygonise(GridCell grid,float isolevel,Triangulo *triangles)
    Linearly interpolate the position where an isosurface cuts
    an edge between two vertices, each with their own scalar value
 */
-Ponto3D VertexInterp(float isolevel,Ponto3D p1,Ponto3D p2,float valp1,float valp2)
+Ponto3D Implicito::VertexInterp(float isolevel,Ponto3D p1,Ponto3D p2,float valp1,float valp2)
 {
    double mu;
    //Ponto3D p;
 
-   if (ABS(isolevel-valp1) < 0.00001)
+   if (abs(isolevel-valp1) < 0.00001)
       return(p1);
-   if (ABS(isolevel-valp2) < 0.00001)
+   if (abs(isolevel-valp2) < 0.00001)
       return(p2);
-   if (ABS(valp1-valp2) < 0.00001)
+   if (abs(valp1-valp2) < 0.00001)
       return(p1);
    mu = (isolevel - valp1) / (valp2 - valp1);
 

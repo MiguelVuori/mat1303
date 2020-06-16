@@ -7,12 +7,12 @@ class GridCell
         Ponto3D p[8];
         float val[8];
 
-        GridCell(Ponto3D *v1, float *(f)(Ponto3D))
+        GridCell(Ponto3D *v1, float *v2)
         {
             for(int i = 0; i < 8; i++)
             {
                 p[i] = v1[i];
-                val[i] = f(p[i]);
+                val[i] = v2[i];
             }
         }
 
