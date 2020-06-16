@@ -3,7 +3,7 @@
 
 
 
-Implicito funcao(-1.5, -1.5, -1.5, 1.5, 1.5, 1.5, 5);
+Implicito funcao(-1.5, -1.5, -1.5, 1.3, 1.3, 1.3, 10);
 
 void config()
 {
@@ -16,10 +16,10 @@ void config()
 //	glScalef(scale, scale, scale);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-//	glOrtho(-2, 2, -2, 2, -200,200);
+	glOrtho(-2, 2, -2, 2, -200,200);
 //	gluPerspective(90, 1, 0.1, 20);
 //	gluPerspective(30, 1, 0.01, 5);
-//	gluLookAt(2, 2, 2, -1, -1, -1, 0, 0, 1);
+	gluLookAt(2, 2, 2, -1, -1, -1, 0, 0, 1);
 }
 
 

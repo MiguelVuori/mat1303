@@ -26,7 +26,7 @@ public:
 		float x = ponto.x;
 		float y = ponto.y;
 		float z = ponto.z;
-		return (x * x + y * y + z * z - 1);
+		return (x * x) + (y * y) + (z * z) - 1;
 	}
 	void normal(float *normal, float *v)
 	{

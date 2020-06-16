@@ -1,6 +1,7 @@
 
 #ifndef PONTO3D_H
 #define PONTO3D_H
+#include <iostream>
 
 class Ponto3D
 {
@@ -14,6 +15,9 @@ public:
         z = z1;
     }
 
+    void mostra(){
+        std::cout << "(" << x << ", " << y << ", " << z << ") \n";
+    }
     Ponto3D operator+(const Ponto3D &pt3dPoint);
     Ponto3D operator-(const Ponto3D &pt3dPoint);
     Ponto3D operator*(float fScale);

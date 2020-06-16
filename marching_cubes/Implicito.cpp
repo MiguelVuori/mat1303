@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include <cmath>
 #include "GridCell.h"
+#include <iostream>
 
 /*
 void Implicito::tetraedro(float *v0, float *v1, float *v2, float *v3)
@@ -161,25 +162,21 @@ void Implicito::tetraedro(float *v0, float *v1, float *v2, float *v3)
 */
 void Implicito::visualiza_implicito() 
 {
-	float v[8][3];
 	Ponto3D inicio;
 	Ponto3D vetor[8];
 	float vals[8];
-	float x, y, z;
 	float dx, dy, dz;
 	dx = (xmax - xmin) / n;
 	dy = (ymax - ymin) / n;
 	dz = (zmax - zmin) / n;
 
 	inicio.x = xmin;
-	x = xmin;
 	for (int i = 0; i < n; i++) {
-		y = ymin;
-		inicio.y;
+		inicio.y = ymin;
 		for (int j = 0; j < n; j++) {
-			z = zmin;
 			inicio.z = zmin;
 			for (int k = 0; k < n; k++) {
+			/*
 				vetor[0] = inicio; // determina x, y, z
 				inicio.y = inicio.y + dy;
 				vetor[1] = inicio; // determina x, y + dy, z
@@ -195,29 +192,40 @@ void Implicito::visualiza_implicito()
 				vetor[6] = inicio; // determina x + dx, y + dy, z + dz
 				inicio.y = inicio.y - dy;
 				vetor[7] = inicio; // determina x + dx, y, z + dz
+			*/
+			
+				vetor[0] = inicio; // determina x, y, z
+				inicio.x = inicio.x + dx;
+				vetor[1] = inicio; // determina x, y + dy, z
+				inicio.z = inicio.z + dz;
+				vetor[2] = inicio; // determina x + dx, y + dy, z
+				inicio.x = inicio.x - dx;
+				vetor[3] = inicio; // determina x + dx, y, z
+				inicio.z = inicio.z - dz; inicio.y = inicio.y + dy;
+				vetor[4] = inicio; //determina x, y, z + dz;
+				inicio.x = inicio.x + dx;
+				vetor[5] = inicio; // determina x, y + dy, z + dz
+				inicio.z = inicio.z + dz;
+				vetor[6] = inicio; // determina x + dx, y + dy, z + dz
+				inicio.x = inicio.x - dx;
+				vetor[7] = inicio; // determina x + dx, y, z + dz
+			
 				for (int m = 0; m < 8; m++){
 					vals[m] = f(vetor[m]);
+				//	if (k==0)
+				//	{
+				//		vetor[m].mostra();
+				//		std::cout << vals[m] << "\n";
+				//	}
+					
 				}
 				GridCell grid(vetor, vals);
 				Polygonise(grid, 0);
-				// v[0][0] = x; v[1][0] = x+dx; v[2][0] = x;    v[3][0] = x+dx;
-				// v[0][1] = y; v[1][1] = y;    v[2][1] = y+dy; v[3][1] = y+dy;
-				// v[0][2] = z; v[1][2] = z;    v[2][2] = z;    v[3][2] = z;
-
-				// v[4][0] = x;    v[5][0] = x+dx; v[6][0] = x;    v[7][0] = x + dx;
-				// v[4][1] = y;    v[5][1] = y;    v[6][1] = y+dy; v[7][1] = y + dy;
-				// v[4][2] = z+dz; v[5][2] = z+dz; v[6][2] = z+dz; v[7][2] = z+dz;
-				// tetraedro(v[0], v[1], v[3], v[7]); 
-				// tetraedro(v[0], v[1], v[5], v[7]);
-				// tetraedro(v[0], v[2], v[3], v[7]);
-				// tetraedro(v[0], v[2], v[6], v[7]);
-				// tetraedro(v[0], v[4], v[5], v[7]);
-				// tetraedro(v[0], v[4], v[6], v[7]);
-				z += dz;
+				inicio.y = inicio.y - dy;
 			}
-			y += dy;
+			inicio.y += dy;
 		}
-		x += dx;
+		inicio.x += dx;
 	}
 }
 
