@@ -1,4 +1,8 @@
+#ifndef GRIDCELL_H
+#define GRIDCELL_H
+
 #include "Ponto3D.h"
+
 
 class GridCell
 {
@@ -17,3 +21,5 @@ class GridCell
         }
 
 };
+
+#endif

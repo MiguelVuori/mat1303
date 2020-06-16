@@ -1,3 +1,7 @@
+
+#ifndef PONTO3D_H
+#define PONTO3D_H
+
 class Ponto3D
 {
 public:
@@ -24,3 +28,5 @@ public:
     //float get_y(void);
     //float get_z(void);
 };
+
+#endif 

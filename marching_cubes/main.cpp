@@ -1,8 +1,7 @@
 #include "Implicito.h"
-#include "Ponto3D.h"
 #include <GL/glut.h>
-#include <cmath>
-#include "GridCell.h"
+
+
 
 Implicito funcao(-1.5, -1.5, -1.5, 1.5, 1.5, 1.5, 5);
 
@@ -18,19 +17,11 @@ void config()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 //	glOrtho(-2, 2, -2, 2, -200,200);
-	gluPerspective(90, 1, 0.1, 20);
-	//gluPerspective(30, 1, 0.01, 5);
-	gluLookAt(2, 2, 2, -1, -1, -1, 0, 0, 1);
+//	gluPerspective(90, 1, 0.1, 20);
+//	gluPerspective(30, 1, 0.01, 5);
+//	gluLookAt(2, 2, 2, -1, -1, -1, 0, 0, 1);
 }
 
-void display()
-{
-	glClearColor(1.0, 1.0, 1.0, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	eixos();
-    funcao.visualiza_implicito();
-	glutSwapBuffers();
-}
 
 void eixos()
 {
@@ -51,6 +42,15 @@ void eixos()
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 0, 1);
 	glEnd();
+}
+
+void display()
+{
+	glClearColor(1.0, 1.0, 1.0, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	eixos();
+    funcao.visualiza_implicito();
+	glutSwapBuffers();
 }
 
 int main(int argc, char **argv)
