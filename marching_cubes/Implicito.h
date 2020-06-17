@@ -26,7 +26,7 @@ public:
 		float x = ponto.x;
 		float y = ponto.y;
 		float z = ponto.z;
-		return (x * x) + (y * y) + (z * z) - 2;
+		return (x * x) + (y * y) + (z * z) - 1;
 	}
 	Ponto3D normal(Ponto3D v)
 	{
@@ -40,8 +40,8 @@ public:
 		return ponto;
 	}
 	void tetraedro(float *v0, float *v1, float *v2, float *v3);
-	int Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz);
+	int Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez);
 	Ponto3D VertexInterp(float isolevel,Ponto3D p1,Ponto3D p2,float valp1,float valp2);
 	float LinearInterp(Ponto3D p1, Ponto3D p2, float val1, float val2, Ponto3D p3);
-	void visualiza_implicito();
+	void visualiza_implicito(float eyex, float eyey, float eyez);
 };

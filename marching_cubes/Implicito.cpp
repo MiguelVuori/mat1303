@@ -160,7 +160,7 @@ void Implicito::tetraedro(float *v0, float *v1, float *v2, float *v3)
 	}
 }
 */
-void Implicito::visualiza_implicito()
+void Implicito::visualiza_implicito(float eyex, float eyey, float eyez)
 {
 	Ponto3D inicio;
 	Ponto3D vetor[8];
@@ -202,7 +202,7 @@ void Implicito::visualiza_implicito()
 					vals[m] = f(vetor[m]);
 				}
 				GridCell grid(vetor, vals);
-				Polygonise(grid, 0, dx, dy, dz);
+				Polygonise(grid, 0, dx, dy, dz, eyex, eyey, eyez);
 				inicio.y = inicio.y - dy;
 			}
 			inicio.y += dy;
@@ -211,14 +211,14 @@ void Implicito::visualiza_implicito()
 	}
 }
 
-int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz)
+int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez)
 {
 
 	int i, ntriang;
 	int cubeindex;
 	float normal_list[12];
 	Ponto3D vertlist[12];
-	Ponto3D observer(5, 5, 3);
+	Ponto3D observer(eyex, eyey, eyez);
 	int edgeTable[256] = {
 		0x0, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
 		0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
@@ -653,7 +653,7 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
 		pd_int1 = normal_1.produto_interno(observer);
 
-		normal_list[0] = LinearInterp(grid.p[4], grid.p[5], pd_int0, pd_int1, vertlist[4]);
+		normal_list[4] = LinearInterp(grid.p[4], grid.p[5], pd_int0, pd_int1, vertlist[4]);
 	}
 	if (edgeTable[cubeindex] & 32)
 	{
@@ -818,22 +818,51 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 	ntriang = 0;
 	for (i = 0; triTable[cubeindex][i] != -1; i += 3)
 	{
-		float normal1, normal2, normal3;
-		normal1 = normal_list[triTable[cubeindex][i]];
-		normal2 = normal_list[triTable[cubeindex][i + 1]];
-		normal3 = normal_list[triTable[cubeindex][i + 2]];
-		if ((normal1 * normal2 < 0) || (normal1 * normal3 < 0) || (normal2 * normal3 < 0))
+		unsigned char aux = 0;
+		float prodint1, prodint2, prodint3;
+		Ponto3D vertice1, vertice2, vertice3, p1, p2;
+
+		vertice1 = vertlist[triTable[cubeindex][i]];
+		vertice2 = vertlist[triTable[cubeindex][i + 1]];
+		vertice3 = vertlist[triTable[cubeindex][i + 2]];
+
+		prodint1 = normal_list[triTable[cubeindex][i]];
+		prodint2 = normal_list[triTable[cubeindex][i + 1]];
+		prodint3 = normal_list[triTable[cubeindex][i + 2]];
+
+		if ((prodint1 * prodint2 < 0) || (prodint1 * prodint3 < 0) || (prodint2 * prodint3 < 0))
 		{
-			glColor3f(0, 0, 1);
-			glBegin(GL_LINE_LOOP);
-			glVertex3f(vertlist[triTable[cubeindex][i]].x, vertlist[triTable[cubeindex][i]].y, vertlist[triTable[cubeindex][i]].z);
-			glVertex3f(vertlist[triTable[cubeindex][i + 1]].x, vertlist[triTable[cubeindex][i + 1]].y, vertlist[triTable[cubeindex][i + 1]].z);
-			glVertex3f(vertlist[triTable[cubeindex][i + 2]].x, vertlist[triTable[cubeindex][i + 2]].y, vertlist[triTable[cubeindex][i + 2]].z);
+			if (prodint1 > 0)
+				aux = aux | 1;
+			if (prodint2 > 0)
+				aux = aux | 2;
+			if (prodint3 > 0)
+				aux = aux | 4;
+
+			if (aux == 1 || aux == 6)
+			{
+				p1 = VertexInterp(0, vertice1, vertice2, prodint1, prodint2);
+				p2 = VertexInterp(0, vertice1, vertice3, prodint1, prodint3);
+			}
+			if (aux == 2 || aux == 5)
+			{
+				p1 = VertexInterp(0, vertice1, vertice2, prodint1, prodint2);
+				p2 = VertexInterp(0, vertice2, vertice3, prodint2, prodint3);
+			}
+			if (aux == 4 || aux == 3)
+			{
+				p1 = VertexInterp(0, vertice1, vertice3, prodint1, prodint3);
+				p2 = VertexInterp(0, vertice2, vertice3, prodint2, prodint3);
+			}
+
+			glColor3f(0.2, 0.5, 1);
+			glBegin(GL_LINES);
+			glVertex3f(p1.x, p1.y, p1.z);
+			glVertex3f(p2.x, p2.y, p2.z);
 			glEnd();
 			ntriang++;
 		}
 	}
-
 	return (ntriang);
 }
 
