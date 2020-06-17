@@ -165,7 +165,6 @@ void Implicito::visualiza_implicito()
 	bool dentro_fora = false; //booleano que determina se um cubo está com parte dele dentro da superficie e parte fora
 	Ponto3D inicio;
 	Ponto3D vetor[8];
-	Ponto3D normais[8];
 	float vals[8];
 	float dx, dy, dz;
 	dx = (xmax - xmin) / n;
@@ -199,12 +198,11 @@ void Implicito::visualiza_implicito()
 					vals[m] = f(vetor[m]);
 					if(fabs(vals[m]) < 0.0001)
 						dentro_fora = true;
-					normais[m] = normal(vetor[m]);
 				}
 				if (dentro_fora = true)
 				{
 					GridCell grid(vetor, vals);
-					Polygonise(grid, 0);
+					Polygonise(grid, 0, dx, dy, dz);
 				}
 				inicio.y = inicio.y - dy;
 				dentro_fora = false;
@@ -215,14 +213,14 @@ void Implicito::visualiza_implicito()
 	}
 }
 
-int Implicito::Polygonise(GridCell grid, float isolevel)
+int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz)
 {
 
 	int i,ntriang;
 	int cubeindex;
 	float normal_list[12];
 	Ponto3D vertlist[12];
-
+	Ponto3D observer(5, 5, 3);
 	int edgeTable[256]={
 	0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
 	0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
@@ -517,7 +515,7 @@ int Implicito::Polygonise(GridCell grid, float isolevel)
 	/*
 		Determine the index into the edge table which
 		tells us which vertices are inside of the surface
-	*/
+	*/	
 	cubeindex = 0;
 	if (grid.val[0] < isolevel) cubeindex |= 1;
 	if (grid.val[1] < isolevel) cubeindex |= 2;
@@ -533,10 +531,28 @@ int Implicito::Polygonise(GridCell grid, float isolevel)
 		return(0);
 
 	/* Find the vertices where the surface intersects the cube */
-	if (edgeTable[cubeindex] & 1)
+	if (edgeTable[cubeindex] & 1){
+		Ponto3D normal_0, normal_1, aux_0, aux_1;
+		float pd_int0, pd_int1;
+		
 		vertlist[0] =
 			VertexInterp(isolevel,grid.p[0],grid.p[1],grid.val[0],grid.val[1]);
-		normal_list[0] = (grid.val[1] - grid.val[0])/
+		
+		aux_0 = grid.p[0];
+		normal_0.x =	(f(aux_0.x += dx) - f(aux_0.x -= dx))/dx;
+		normal_0.y =	(f(aux_0.y += dy) - f(aux_0.y -= dy))/dy;
+		normal_0.z =	(f(aux_0.z += dz) - f(aux_0.z -= dz))/dz;
+		pd_int0 = normal_0.produto_interno(observer);
+
+
+		aux_1 = grid.p[1];
+		normal_1.x =	(f(aux_1.x += dx) - f(aux_1.x -= dx))/dx;
+		normal_1.y =	(f(aux_1.y += dy) - f(aux_1.y -= dy))/dy;
+		normal_1.z =	(f(aux_1.z += dz) - f(aux_1.z -= dz))/dz;
+		pd_int1 = normal_1.produto_interno(observer);
+
+		normal_list[0] = VertexInterp(isolevel, grid.p[0], grid.p[1], pd_int0, pd_int1);
+	}
 	if (edgeTable[cubeindex] & 2)
 		vertlist[1] =
 			VertexInterp(isolevel,grid.p[1],grid.p[2],grid.val[1],grid.val[2]);
