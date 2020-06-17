@@ -26,16 +26,18 @@ public:
 		float x = ponto.x;
 		float y = ponto.y;
 		float z = ponto.z;
-		return (x * x) + (y * y) + (z * z) - 1;
+		return (x * x) - (y * y) - (z * z);
 	}
-	void normal(float *normal, float *v)
+	Ponto3D normal(Ponto3D v)
 	{
-		float x = v[0];
-		float y = v[1];
-		float z = v[2];
-		normal[0] = 3 * x * x - 3 * (x + y + z - 1) * (x + y + z - 1);
-		normal[1] = 3 * y * y - 3 * (x + y + z - 1) * (x + y + z - 1);
-		normal[2] = 3 * z * z - 3 * (x + y + z - 1) * (x + y + z - 1);
+		Ponto3D ponto;
+		float x = v.x;
+		float y = v.y;
+		float z = v.z;
+		ponto.x = 3 * x * x - 3 * (x + y + z - 1) * (x + y + z - 1);
+		ponto.y = 3 * y * y - 3 * (x + y + z - 1) * (x + y + z - 1);
+		ponto.z = 3 * z * z - 3 * (x + y + z - 1) * (x + y + z - 1);
+		return ponto;
 	}
 	void tetraedro(float *v0, float *v1, float *v2, float *v3);
 	int Polygonise(GridCell grid, float isolevel);

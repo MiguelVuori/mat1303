@@ -164,6 +164,7 @@ void Implicito::visualiza_implicito()
 {
 	Ponto3D inicio;
 	Ponto3D vetor[8];
+	Ponto3D normais[8];
 	float vals[8];
 	float dx, dy, dz;
 	dx = (xmax - xmin) / n;
@@ -176,48 +177,26 @@ void Implicito::visualiza_implicito()
 		for (int j = 0; j < n; j++) {
 			inicio.z = zmin;
 			for (int k = 0; k < n; k++) {
-			/*
-				vetor[0] = inicio; // determina x, y, z
-				inicio.y = inicio.y + dy;
-				vetor[1] = inicio; // determina x, y + dy, z
-				inicio.x = inicio.x + dx;
-				vetor[2] = inicio; // determina x + dx, y + dy, z
-				inicio.y = inicio.y - dy;
-				vetor[3] = inicio; // determina x + dx, y, z
-				inicio.x = inicio.x - dx; inicio.z = inicio.z + dz;
-				vetor[4] = inicio; //determina x, y, z + dz;
-				inicio.y = inicio.y + dy;
-				vetor[5] = inicio; // determina x, y + dy, z + dz
-				inicio.x = inicio.x + dx;
-				vetor[6] = inicio; // determina x + dx, y + dy, z + dz
-				inicio.y = inicio.y - dy;
-				vetor[7] = inicio; // determina x + dx, y, z + dz
-			*/
 			
 				vetor[0] = inicio; // determina x, y, z
 				inicio.x = inicio.x + dx;
-				vetor[1] = inicio; // determina x, y + dy, z
+				vetor[1] = inicio; // determina x + dx, y, z
 				inicio.z = inicio.z + dz;
-				vetor[2] = inicio; // determina x + dx, y + dy, z
+				vetor[2] = inicio; // determina x + dx, y, z + dz
 				inicio.x = inicio.x - dx;
-				vetor[3] = inicio; // determina x + dx, y, z
+				vetor[3] = inicio; // determina x, y, z + dz
 				inicio.z = inicio.z - dz; inicio.y = inicio.y + dy;
-				vetor[4] = inicio; //determina x, y, z + dz;
+				vetor[4] = inicio; //determina x, y + dy, z;
 				inicio.x = inicio.x + dx;
-				vetor[5] = inicio; // determina x, y + dy, z + dz
+				vetor[5] = inicio; // determina x + dx, y + dy, z
 				inicio.z = inicio.z + dz;
 				vetor[6] = inicio; // determina x + dx, y + dy, z + dz
 				inicio.x = inicio.x - dx;
-				vetor[7] = inicio; // determina x + dx, y, z + dz
+				vetor[7] = inicio; // determina x, y + dy, z + dz
 			
 				for (int m = 0; m < 8; m++){
 					vals[m] = f(vetor[m]);
-				//	if (k==0)
-				//	{
-				//		vetor[m].mostra();
-				//		std::cout << vals[m] << "\n";
-				//	}
-					
+					normais[m] = normal(vetor[m]);
 				}
 				GridCell grid(vetor, vals);
 				Polygonise(grid, 0);
