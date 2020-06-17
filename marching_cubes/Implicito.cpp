@@ -640,14 +640,14 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 
 		float pd_int0, pd_int1;
 		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		aux_0 = grid.p[0];
+		aux_0 = grid.p[4];
 
 		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
 		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
 		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
 		pd_int0 = normal_0.produto_interno(observer);
 
-		aux_1 = grid.p[1];
+		aux_1 = grid.p[5];
 		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
 		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
 		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
