@@ -1,5 +1,9 @@
 #include "Ponto3D.h"
 
+float Ponto3D::produto_interno(Ponto3D vet) {
+	return (x * vet.x) + (y * vet.y) + (z * vet.z);
+}
+
 Ponto3D Ponto3D::operator+(const Ponto3D& pt3dPoint)
 {
 	Ponto3D result(pt3dPoint.x + x, pt3dPoint.y + y, pt3dPoint.z + z);

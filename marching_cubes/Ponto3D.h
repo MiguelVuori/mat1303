@@ -18,6 +18,8 @@ public:
     void mostra(){
         std::cout << "(" << x << ", " << y << ", " << z << ") \n";
     }
+
+    float produto_interno(Ponto3D vet);
     Ponto3D operator+(const Ponto3D &pt3dPoint);
     Ponto3D operator-(const Ponto3D &pt3dPoint);
     Ponto3D operator*(float fScale);

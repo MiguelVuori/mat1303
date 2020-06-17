@@ -162,6 +162,7 @@ void Implicito::tetraedro(float *v0, float *v1, float *v2, float *v3)
 */
 void Implicito::visualiza_implicito() 
 {
+	bool dentro_fora = false; //booleano que determina se um cubo está com parte dele dentro da superficie e parte fora
 	Ponto3D inicio;
 	Ponto3D vetor[8];
 	Ponto3D normais[8];
@@ -177,7 +178,7 @@ void Implicito::visualiza_implicito()
 		for (int j = 0; j < n; j++) {
 			inicio.z = zmin;
 			for (int k = 0; k < n; k++) {
-			
+				
 				vetor[0] = inicio; // determina x, y, z
 				inicio.x = inicio.x + dx;
 				vetor[1] = inicio; // determina x + dx, y, z
@@ -196,11 +197,17 @@ void Implicito::visualiza_implicito()
 			
 				for (int m = 0; m < 8; m++){
 					vals[m] = f(vetor[m]);
+					if(fabs(vals[m]) < 0.0001)
+						dentro_fora = true;
 					normais[m] = normal(vetor[m]);
 				}
-				GridCell grid(vetor, vals);
-				Polygonise(grid, 0);
+				if (dentro_fora = true)
+				{
+					GridCell grid(vetor, vals);
+					Polygonise(grid, 0);
+				}
 				inicio.y = inicio.y - dy;
+				dentro_fora = false;
 			}
 			inicio.y += dy;
 		}
@@ -213,6 +220,7 @@ int Implicito::Polygonise(GridCell grid, float isolevel)
 
 	int i,ntriang;
 	int cubeindex;
+	float normal_list[12];
 	Ponto3D vertlist[12];
 
 	int edgeTable[256]={
@@ -528,6 +536,7 @@ int Implicito::Polygonise(GridCell grid, float isolevel)
 	if (edgeTable[cubeindex] & 1)
 		vertlist[0] =
 			VertexInterp(isolevel,grid.p[0],grid.p[1],grid.val[0],grid.val[1]);
+		normal_list[0] = (grid.val[1] - grid.val[0])/
 	if (edgeTable[cubeindex] & 2)
 		vertlist[1] =
 			VertexInterp(isolevel,grid.p[1],grid.p[2],grid.val[1],grid.val[2]);
