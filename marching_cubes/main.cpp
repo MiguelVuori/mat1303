@@ -18,7 +18,7 @@ int xi, yi, xf, yf;
 
 Implicito funcao(-2.5, -2.5, -2.5, 2.3, 2.3, 2.3, 20);
 vector<Triangulo> triangles;
-bool states[2] = {false,false};
+bool state = false;
 
 void config()
 {
@@ -68,8 +68,10 @@ void display()
 	eixos();
 	// funcao.visualiza_implicito(model[2], model[6], model[10]);
 	triangles = funcao.calcula_triangles(model[2], model[6], model[10], true);
-	if(states[0] == true) funcao.showtriangles(triangles);
-	if(states[1] == true) funcao.MarchingLines(triangles);
+	if
+		(state == false) funcao.showtriangles(triangles);
+	else
+	 	funcao.MarchingLines(triangles);
 	glutSwapBuffers();
 }
 
@@ -123,13 +125,15 @@ void Teclado(unsigned char key, int x, int y)
 
     if ((key == 'C') || (key == 'c'))
     {
-		states[0] = !states[0];
-		glutPostRedisplay();
+		state = !state;
+		if (state == false)
+			glutPostRedisplay();
     }
 	if ((key == 'L') || (key == 'l'))
     {
-		states[1] = !states[1];
-		glutPostRedisplay();
+		state = !state;
+		if (state == true)
+			glutPostRedisplay();
     }
 }
 
