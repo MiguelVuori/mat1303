@@ -216,7 +216,7 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 
 	int i, ntriang;
 	int cubeindex;
-	float normal_list[12];
+	float pdint_list[12];
 	Ponto3D vertlist[12];
 	Ponto3D observer(eyex, eyey, eyez);
 	int edgeTable[256] = {
@@ -539,279 +539,90 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 	/* Find the vertices where the surface intersects the cube */
 	if (edgeTable[cubeindex] & 1)
 	{
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		float pd_int0, pd_int1;
-
 		vertlist[0] =
 			VertexInterp(isolevel, grid.p[0], grid.p[1], grid.val[0], grid.val[1]);
 
-		// aux = vertlist[0];
-		// normal.x = (f(aux.x += dx) - f(aux.x -= dx)) / dx;
-		// normal.y = (f(aux.y += dy) - f(aux.y -= dy)) / dy;
-		// normal.z = (f(aux.z += dz) - f(aux.z -= dz)) / dz;
-		// pd_int = normal.produto_interno(observer);
-
-		aux_0 = grid.p[0];
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[1];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[0] = LinearInterp(grid.p[0], grid.p[1], pd_int0, pd_int1, vertlist[0]);
+		pdint_list[0] = LinearInterp(grid.p[0], grid.p[1], vertlist[0], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 2)
 	{
-
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		float pd_int0, pd_int1;
-
 		vertlist[1] =
 			VertexInterp(isolevel, grid.p[1], grid.p[2], grid.val[1], grid.val[2]);
 
-		aux_0 = grid.p[1];
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[2];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[1] = LinearInterp(grid.p[1], grid.p[2], pd_int0, pd_int1, vertlist[1]);
+		pdint_list[1] = LinearInterp(grid.p[1], grid.p[2], vertlist[1], dx, dy, dz, observer);
 	}
-
 	if (edgeTable[cubeindex] & 4)
 	{
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		float pd_int0, pd_int1;
 
 		vertlist[2] =
 			VertexInterp(isolevel, grid.p[2], grid.p[3], grid.val[2], grid.val[3]);
 
-		aux_0 = grid.p[2];
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[3];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[2] = LinearInterp(grid.p[2], grid.p[3], pd_int0, pd_int1, vertlist[2]);
+		pdint_list[2] = LinearInterp(grid.p[2], grid.p[3], vertlist[2], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 8)
 	{
 		vertlist[3] =
 			VertexInterp(isolevel, grid.p[3], grid.p[0], grid.val[3], grid.val[0]);
 
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		aux_0 = grid.p[3];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[0];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[3] = LinearInterp(grid.p[3], grid.p[0], pd_int0, pd_int1, vertlist[3]);
+		pdint_list[3] = LinearInterp(grid.p[3], grid.p[0], vertlist[3], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 16)
 	{
 		vertlist[4] =
 			VertexInterp(isolevel, grid.p[4], grid.p[5], grid.val[4], grid.val[5]);
 
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		aux_0 = grid.p[4];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[5];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[4] = LinearInterp(grid.p[4], grid.p[5], pd_int0, pd_int1, vertlist[4]);
+		pdint_list[4] = LinearInterp(grid.p[4], grid.p[5], vertlist[4], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 32)
 	{
 		vertlist[5] =
 			VertexInterp(isolevel, grid.p[5], grid.p[6], grid.val[5], grid.val[6]);
 
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		aux_0 = grid.p[5];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[6];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[5] = LinearInterp(grid.p[5], grid.p[6], pd_int0, pd_int1, vertlist[5]);
+		pdint_list[5] = LinearInterp(grid.p[5], grid.p[6], vertlist[5], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 64)
 	{
 		vertlist[6] =
 			VertexInterp(isolevel, grid.p[6], grid.p[7], grid.val[6], grid.val[7]);
 
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		aux_0 = grid.p[6];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[7];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[6] = LinearInterp(grid.p[6], grid.p[7], pd_int0, pd_int1, vertlist[6]);
+		pdint_list[6] = LinearInterp(grid.p[6], grid.p[7], vertlist[6], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 128)
 	{
 		vertlist[7] =
 			VertexInterp(isolevel, grid.p[7], grid.p[4], grid.val[7], grid.val[4]);
 
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
-		aux_0 = grid.p[7];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[4];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[7] = LinearInterp(grid.p[7], grid.p[4], pd_int0, pd_int1, vertlist[7]);
+		pdint_list[7] = LinearInterp(grid.p[7], grid.p[4], vertlist[7], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 256)
 	{
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
 
 		vertlist[8] =
 			VertexInterp(isolevel, grid.p[0], grid.p[4], grid.val[0], grid.val[4]);
-
-		aux_0 = grid.p[0];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[4];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[8] = LinearInterp(grid.p[0], grid.p[4], pd_int0, pd_int1, vertlist[8]);
+		pdint_list[8] = LinearInterp(grid.p[0], grid.p[4], vertlist[8], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 512)
 	{
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
 
 		vertlist[9] =
 			VertexInterp(isolevel, grid.p[1], grid.p[5], grid.val[1], grid.val[5]);
 
-		aux_0 = grid.p[1];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[5];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[9] = LinearInterp(grid.p[1], grid.p[5], pd_int0, pd_int1, vertlist[9]);
+		pdint_list[9] = LinearInterp(grid.p[1], grid.p[5], vertlist[9], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 1024)
 	{
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
 
 		vertlist[10] =
 			VertexInterp(isolevel, grid.p[2], grid.p[6], grid.val[2], grid.val[6]);
-
-		aux_0 = grid.p[2];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[6];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[10] = LinearInterp(grid.p[2], grid.p[6], pd_int0, pd_int1, vertlist[10]);
+		pdint_list[10] = LinearInterp(grid.p[2], grid.p[6], vertlist[10], dx, dy, dz, observer);
 	}
 	if (edgeTable[cubeindex] & 2048)
 	{
-		float pd_int0, pd_int1;
-		Ponto3D normal_0, normal_1, aux_0, aux_1;
 
 		vertlist[11] =
 			VertexInterp(isolevel, grid.p[3], grid.p[7], grid.val[3], grid.val[7]);
 
-		aux_0 = grid.p[3];
-
-		normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
-		normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
-		normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
-		pd_int0 = normal_0.produto_interno(observer);
-
-		aux_1 = grid.p[7];
-		normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
-		normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
-		normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
-		pd_int1 = normal_1.produto_interno(observer);
-
-		normal_list[11] = LinearInterp(grid.p[3], grid.p[7], pd_int0, pd_int1, vertlist[11]);
+		pdint_list[11] = LinearInterp(grid.p[3], grid.p[7], vertlist[11], dx, dy, dz, observer);
 	}
 
 	/* Create the triangle */
@@ -826,9 +637,9 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 		vertice2 = vertlist[triTable[cubeindex][i + 1]];
 		vertice3 = vertlist[triTable[cubeindex][i + 2]];
 
-		prodint1 = normal_list[triTable[cubeindex][i]];
-		prodint2 = normal_list[triTable[cubeindex][i + 1]];
-		prodint3 = normal_list[triTable[cubeindex][i + 2]];
+		prodint1 = pdint_list[triTable[cubeindex][i]];
+		prodint2 = pdint_list[triTable[cubeindex][i + 1]];
+		prodint3 = pdint_list[triTable[cubeindex][i + 2]];
 
 		if ((prodint1 * prodint2 < 0) || (prodint1 * prodint3 < 0) || (prodint2 * prodint3 < 0))
 		{
@@ -891,12 +702,33 @@ Ponto3D Implicito::VertexInterp(float isolevel, Ponto3D p1, Ponto3D p2, float va
 	return (p);
 }
 
-float Implicito::LinearInterp(Ponto3D p1, Ponto3D p2, float val1, float val2, Ponto3D p3)
+/*
+	Interpola o valor do produto interno entre o observer e a normal do vértice de um triângulo
+	através do valor dos produtos internos dos vértices de uma aresta do cubo
+*/
+
+float Implicito::LinearInterp(Ponto3D p1, Ponto3D p2, Ponto3D p3, float dx, float dy, float dz, Ponto3D observer)
 {
+
+	float pd_int0, pd_int1;
+	Ponto3D normal_0, normal_1, aux_0, aux_1;
+
+	aux_0 = p1;
+	normal_0.x = (f(aux_0.x += dx) - f(aux_0.x -= dx)) / dx;
+	normal_0.y = (f(aux_0.y += dy) - f(aux_0.y -= dy)) / dy;
+	normal_0.z = (f(aux_0.z += dz) - f(aux_0.z -= dz)) / dz;
+	pd_int0 = normal_0.produto_interno(observer);
+
+	aux_1 = p2;
+	normal_1.x = (f(aux_1.x += dx) - f(aux_1.x -= dx)) / dx;
+	normal_1.y = (f(aux_1.y += dy) - f(aux_1.y -= dy)) / dy;
+	normal_1.z = (f(aux_1.z += dz) - f(aux_1.z -= dz)) / dz;
+	pd_int1 = normal_1.produto_interno(observer);
+
 	if ((p1.x - p2.x) != 0)
-		return (val1 * (p2.x - p3.x) + val2 * (p3.x - p1.x)) / (p2.x - p1.x);
+		return (pd_int0 * (p2.x - p3.x) + pd_int1 * (p3.x - p1.x)) / (p2.x - p1.x);
 	if ((p1.y - p2.y) != 0)
-		return (val1 * (p2.y - p3.y) + val2 * (p3.y - p1.y)) / (p2.y - p1.y);
+		return (pd_int0 * (p2.y - p3.y) + pd_int1 * (p3.y - p1.y)) / (p2.y - p1.y);
 	if ((p1.z - p2.z) != 0)
-		return (val1 * (p2.z - p3.z) + val2 * (p3.z - p1.z)) / (p2.z - p1.z);
+		return (pd_int0 * (p2.z - p3.z) + pd_int1 * (p3.z - p1.z)) / (p2.z - p1.z);
 }
