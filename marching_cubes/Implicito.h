@@ -2,6 +2,9 @@
 #include "GridCell.h"
 #include "Triangulo.h"
 #include <cmath>
+#include <vector>
+
+using namespace std;
 
 class Implicito
 {
@@ -43,13 +46,16 @@ public:
 
 	void tetraedro(float *v0, float *v1, float *v2, float *v3);
 
-	void Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez, bool lines);
+	void Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez, bool lines, vector<Triangulo> &triangles);
 	
-	void MarchingLines(int *trivector, float *pdint_list, Ponto3D *vertlist);
+	void MarchingLines(vector<Triangulo> &triangles);
 
 	Ponto3D VertexInterp(float isolevel,Ponto3D p1,Ponto3D p2,float valp1,float valp2);
 
 	float LinearInterp(Ponto3D p1, Ponto3D p2, Ponto3D p3, float dx, float dy, float dz, Ponto3D observer);
 
-	void visualiza_implicito(float eyex, float eyey, float eyez, bool lines);
+	vector<Triangulo> calcula_triangles(float eyex, float eyey, float eyez, bool lines);
+
+	void showtriangles(vector<Triangulo> &triangles);
 };
+

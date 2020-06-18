@@ -4,12 +4,15 @@
 #include <cmath>
 #include "GridCell.h"
 #include <iostream>
+#include <vector>
+using namespace std;
 
 
-void Implicito::visualiza_implicito(float eyex, float eyey, float eyez, bool lines)
+vector<Triangulo> Implicito::calcula_triangles(float eyex, float eyey, float eyez, bool lines)
 {
 	Ponto3D inicio;
 	Ponto3D vetor[8];
+	vector<Triangulo> all_triangles;
 	float vals[8];
 	float dx, dy, dz;
 	dx = (xmax - xmin) / n;
@@ -48,16 +51,19 @@ void Implicito::visualiza_implicito(float eyex, float eyey, float eyez, bool lin
 					vals[m] = f(vetor[m]);
 				}
 				GridCell grid(vetor, vals);
-				Polygonise(grid, 0, dx, dy, dz, eyex, eyey, eyez, lines);
+				Polygonise(grid, 0, dx, dy, dz, eyex, eyey, eyez, lines, all_triangles);
 				inicio.y = inicio.y - dy;
 			}
 			inicio.y += dy;
 		}
 		inicio.x += dx;
 	}
+	//showtriangles(all_triangles);
+	//MarchingLines(all_triangles);
+	return all_triangles;
 }
 
-void Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez, bool lines)
+void Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez, bool lines, vector<Triangulo> &triangles)
 {
 
 	int i, ntriang;
@@ -471,7 +477,18 @@ void Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, fl
 		pdint_list[11] = LinearInterp(grid.p[3], grid.p[7], vertlist[11], dx, dy, dz, observer);
 	}
 
+	for (i = 0; triTable[cubeindex][i] != -1; i += 3)
+	{
+		Triangulo novo(vertlist[triTable[cubeindex][i  ]],vertlist[triTable[cubeindex][i+1]],vertlist[triTable[cubeindex][i+2]]);
+		novo.produto_interno[0] = pdint_list[triTable[cubeindex][i  ]];
+		novo.produto_interno[1] = pdint_list[triTable[cubeindex][i+1]];
+		novo.produto_interno[2] = pdint_list[triTable[cubeindex][i+2]];
+
+		triangles.push_back(novo);		
+	}
+
 	/* Create the triangle */
+	/*
 	if (lines == true) {
 		MarchingLines(triTable[cubeindex], pdint_list, vertlist);
 	}
@@ -485,12 +502,16 @@ void Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, fl
 				glVertex3f(vertlist[triTable[cubeindex][i+1]].x, vertlist[triTable[cubeindex][i+1]].y, vertlist[triTable[cubeindex][i+1]].z);
 				glVertex3f(vertlist[triTable[cubeindex][i+2]].x, vertlist[triTable[cubeindex][i+2]].y, vertlist[triTable[cubeindex][i+2]].z);
 			glEnd();
+
+			Triangulo novo(vertlist[triTable[cubeindex][i  ]],vertlist[triTable[cubeindex][i+1]],vertlist[triTable[cubeindex][i+2]]);
+			triangles.push_back(novo);
+			
 		}
-		
 	}
+	*/
 	
 }
-
+/*
 void Implicito::MarchingLines(int *trivector, float *pdint_list, Ponto3D *vertlist){
 	for (int i = 0; trivector[i] != -1; i += 3)
 	{
@@ -505,6 +526,56 @@ void Implicito::MarchingLines(int *trivector, float *pdint_list, Ponto3D *vertli
 		prodint1 = pdint_list[trivector[i]];
 		prodint2 = pdint_list[trivector[i + 1]];
 		prodint3 = pdint_list[trivector[i + 2]];
+
+		if ((prodint1 * prodint2 < 0) || (prodint1 * prodint3 < 0) || (prodint2 * prodint3 < 0))
+		{
+			if (prodint1 > 0)
+				aux = aux | 1;
+			if (prodint2 > 0)
+				aux = aux | 2;
+			if (prodint3 > 0)
+				aux = aux | 4;
+
+			if (aux == 1 || aux == 6)
+			{
+				p1 = VertexInterp(0, vertice1, vertice2, prodint1, prodint2);
+				p2 = VertexInterp(0, vertice1, vertice3, prodint1, prodint3);
+			}
+			if (aux == 2 || aux == 5)
+			{
+				p1 = VertexInterp(0, vertice1, vertice2, prodint1, prodint2);
+				p2 = VertexInterp(0, vertice2, vertice3, prodint2, prodint3);
+			}
+			if (aux == 4 || aux == 3)
+			{
+				p1 = VertexInterp(0, vertice1, vertice3, prodint1, prodint3);
+				p2 = VertexInterp(0, vertice2, vertice3, prodint2, prodint3);
+			}
+
+			glColor3f(0.2, 0.5, 1);
+			glBegin(GL_LINES);
+			glVertex3f(p1.x, p1.y, p1.z);
+			glVertex3f(p2.x, p2.y, p2.z);
+			glEnd();
+		}
+	}
+}
+*/
+
+void Implicito::MarchingLines(vector<Triangulo> &triangles){
+	for (int i = 0; i < triangles.size(); i++)
+	{
+		unsigned char aux = 0;
+		float prodint1, prodint2, prodint3;
+		Ponto3D vertice1, vertice2, vertice3, p1, p2;
+
+		vertice1 = triangles[i].p[0];
+		vertice2 = triangles[i].p[1];
+		vertice3 = triangles[i].p[2];
+
+		prodint1 = triangles[i].produto_interno[0];
+		prodint2 = triangles[i].produto_interno[1];
+		prodint3 = triangles[i].produto_interno[2];
 
 		if ((prodint1 * prodint2 < 0) || (prodint1 * prodint3 < 0) || (prodint2 * prodint3 < 0))
 		{
@@ -594,4 +665,24 @@ float Implicito::LinearInterp(Ponto3D p1, Ponto3D p2, Ponto3D p3, float dx, floa
 		return (pd_int0 * (p2.y - p3.y) + pd_int1 * (p3.y - p1.y)) / (p2.y - p1.y);
 	if ((p1.z - p2.z) != 0)
 		return (pd_int0 * (p2.z - p3.z) + pd_int1 * (p3.z - p1.z)) / (p2.z - p1.z);
+}
+
+
+/* 	
+	Passa um vetor de tringulos como parametro e gera uma imagem formada por esses triangulo
+	usando GL_LINE_LOOP
+*/ 
+void Implicito::showtriangles(vector<Triangulo> &triangles)
+{
+	for (unsigned int i = 0; i < triangles.size(); i++)
+	{
+		Ponto3D p1 = triangles[i].p[0];Ponto3D p2 = triangles[i].p[1];Ponto3D p3 = triangles[i].p[2];
+		glColor3f(0, 0, 1);
+		glBegin(GL_LINE_LOOP);
+			glVertex3f(p1.x, p1.y, p1.z);
+			glVertex3f(p2.x, p2.y, p2.z);
+			glVertex3f(p3.x, p3.y, p3.z);
+		glEnd();
+		
+	}	
 }
