@@ -34,8 +34,7 @@ void config()
 	glOrtho(-5, 5, -5, 5, -200,200);
 //	gluPerspective(90, 1, 0.1, 20);
 //	gluPerspective(30, 1, 0.01, 5);
-	gluLookAt(5, 10, 10, 0, 0, 0, -2, -2, 3);
-	triangles = funcao.calcula_triangles(5, 5, 10, true);
+//	triangles = funcao.calcula_triangles(5, 5, 10, true);
 }
 
 
@@ -68,6 +67,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	eixos();
 	// funcao.visualiza_implicito(model[2], model[6], model[10]);
+	triangles = funcao.calcula_triangles(model[2], model[6], model[10], true);
 	if(states[0] == true) funcao.showtriangles(triangles);
 	if(states[1] == true) funcao.MarchingLines(triangles);
 	glutSwapBuffers();
