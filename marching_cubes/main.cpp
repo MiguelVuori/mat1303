@@ -52,7 +52,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	eixos();
 	// funcao.visualiza_implicito(model[2], model[6], model[10]);
-	funcao.visualiza_implicito(5, 5, 10);
+	funcao.visualiza_implicito(5, 5, 10, true);
 	glutSwapBuffers();
 }
 

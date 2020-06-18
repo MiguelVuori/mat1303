@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-void Implicito::visualiza_implicito(float eyex, float eyey, float eyez)
+void Implicito::visualiza_implicito(float eyex, float eyey, float eyez, bool lines)
 {
 	Ponto3D inicio;
 	Ponto3D vetor[8];
@@ -48,7 +48,7 @@ void Implicito::visualiza_implicito(float eyex, float eyey, float eyez)
 					vals[m] = f(vetor[m]);
 				}
 				GridCell grid(vetor, vals);
-				Polygonise(grid, 0, dx, dy, dz, eyex, eyey, eyez);
+				Polygonise(grid, 0, dx, dy, dz, eyex, eyey, eyez, lines);
 				inicio.y = inicio.y - dy;
 			}
 			inicio.y += dy;
@@ -57,7 +57,7 @@ void Implicito::visualiza_implicito(float eyex, float eyey, float eyez)
 	}
 }
 
-int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez)
+void Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, float dz, float eyex, float eyey, float eyez, bool lines)
 {
 
 	int i, ntriang;
@@ -380,7 +380,7 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 
 	/* Cube is entirely in/out of the surface */
 	if (edgeTable[cubeindex] == 0)
-		return (0);
+		return;
 
 	/* Find the vertices where the surface intersects the cube */
 	if (edgeTable[cubeindex] & 1)
@@ -472,20 +472,39 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 	}
 
 	/* Create the triangle */
-	ntriang = 0;
-	for (i = 0; triTable[cubeindex][i] != -1; i += 3)
+	if (lines == true) {
+		MarchingLines(triTable[cubeindex], pdint_list, vertlist);
+	}
+	else
+	{
+		for (i = 0; triTable[cubeindex][i] != -1; i += 3)
+		{
+			glColor3f(0, 0, 1);
+			glBegin(GL_LINE_LOOP);
+				glVertex3f(vertlist[triTable[cubeindex][i]].x, vertlist[triTable[cubeindex][i]].y, vertlist[triTable[cubeindex][i]].z);
+				glVertex3f(vertlist[triTable[cubeindex][i+1]].x, vertlist[triTable[cubeindex][i+1]].y, vertlist[triTable[cubeindex][i+1]].z);
+				glVertex3f(vertlist[triTable[cubeindex][i+2]].x, vertlist[triTable[cubeindex][i+2]].y, vertlist[triTable[cubeindex][i+2]].z);
+			glEnd();
+		}
+		
+	}
+	
+}
+
+void Implicito::MarchingLines(int *trivector, float *pdint_list, Ponto3D *vertlist){
+	for (int i = 0; trivector[i] != -1; i += 3)
 	{
 		unsigned char aux = 0;
 		float prodint1, prodint2, prodint3;
 		Ponto3D vertice1, vertice2, vertice3, p1, p2;
 
-		vertice1 = vertlist[triTable[cubeindex][i]];
-		vertice2 = vertlist[triTable[cubeindex][i + 1]];
-		vertice3 = vertlist[triTable[cubeindex][i + 2]];
+		vertice1 = vertlist[trivector[i]];
+		vertice2 = vertlist[trivector[i + 1]];
+		vertice3 = vertlist[trivector[i + 2]];
 
-		prodint1 = pdint_list[triTable[cubeindex][i]];
-		prodint2 = pdint_list[triTable[cubeindex][i + 1]];
-		prodint3 = pdint_list[triTable[cubeindex][i + 2]];
+		prodint1 = pdint_list[trivector[i]];
+		prodint2 = pdint_list[trivector[i + 1]];
+		prodint3 = pdint_list[trivector[i + 2]];
 
 		if ((prodint1 * prodint2 < 0) || (prodint1 * prodint3 < 0) || (prodint2 * prodint3 < 0))
 		{
@@ -517,10 +536,8 @@ int Implicito::Polygonise(GridCell grid, float isolevel, float dx, float dy, flo
 			glVertex3f(p1.x, p1.y, p1.z);
 			glVertex3f(p2.x, p2.y, p2.z);
 			glEnd();
-			ntriang++;
 		}
 	}
-	return (ntriang);
 }
 
 /*
