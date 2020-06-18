@@ -30,7 +30,7 @@ public:
 		float x = ponto.x;
 		float y = ponto.y;
 		float z = ponto.z;
-		return (x*x) + (y*y) + (z*z) - 2;
+		return (x*x) + ((y*y)/4.0) + ((z*z)/9.0) - 1;
 	}
 	Ponto3D normal(Ponto3D v)
 	{
